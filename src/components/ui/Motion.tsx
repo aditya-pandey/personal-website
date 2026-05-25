@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { ReactNode } from "react";
 
 // Standard easing curve inspired by Apple's smooth spring-like bezier
-const EASE = [0.21, 0.47, 0.32, 0.98];
+const EASE = [0.21, 0.47, 0.32, 0.98] as const;
 
 interface MotionProps {
   children: ReactNode;
