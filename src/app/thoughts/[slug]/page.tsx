@@ -1,0 +1,45 @@
+import { getThoughts, getThoughtBySlug } from "@/lib/content";
+import { MDXRenderer } from "@/components/ui/MDXRenderer";
+import { notFound } from "next/navigation";
+import Link from "next/link";
+
+export async function generateStaticParams() {
+  const thoughts = getThoughts();
+  return thoughts.map((t) => ({ slug: t.slug }));
+}
+
+export default async function ThoughtPost({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const thought = getThoughtBySlug(slug);
+
+  if (!thought) {
+    notFound();
+  }
+
+  return (
+    <div className="w-full max-w-[1120px] mx-auto px-5 lg:px-8 py-[120px]">
+      
+      <Link href="/thoughts" className="font-sans text-sm text-ink/50 hover:text-accent transition-colors inline-flex items-center gap-2 mb-16">
+        &larr; Back to Thoughts
+      </Link>
+
+      <header className="max-w-[65ch] mx-auto mb-[80px]">
+        <h1 className="font-serif text-4xl md:text-5xl lg:text-[48px] tracking-tight leading-[1.1] mb-6">
+          {thought.metadata.title}
+        </h1>
+        <div className="flex items-center gap-4 font-sans text-sm text-ink/60 uppercase tracking-widest border-t border-stone/50 pt-6 mt-12">
+          <time>{new Date(thought.metadata.date).toLocaleDateString("en-US", { month: "long", year: "numeric", day: "numeric" })}</time>
+          {thought.metadata.tags && thought.metadata.tags.length > 0 && (
+            <>
+              <span>&middot;</span>
+              <span>{thought.metadata.tags.join(", ")}</span>
+            </>
+          )}
+        </div>
+      </header>
+
+      <MDXRenderer source={thought.content} />
+      
+    </div>
+  );
+}

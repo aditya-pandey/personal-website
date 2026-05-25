@@ -1,0 +1,2900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Counting to AI — Interactive Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#060b06;
+  --s1:#0d160d;
+  --s2:#131f13;
+  --s3:#1a2a1a;
+  --em:#34d399;
+  --em2:#6ee7b7;
+  --em3:#a7f3d0;
+  --em-faint:rgba(52,211,153,0.07);
+  --em-faint2:rgba(52,211,153,0.04);
+  --red:#f87171;
+  --yellow:#fbbf24;
+  --blue:#60a5fa;
+  --text:#ecfdf5;
+  --tm:#a7f3d0;
+  --td:#4b7a5e;
+  --border:rgba(52,211,153,0.14);
+  --border2:rgba(52,211,153,0.25);
+  --glow:0 0 20px rgba(52,211,153,0.15);
+  --sidebar:260px;
+}
+
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Source Serif 4',Georgia,serif;
+  font-size:16px;
+  line-height:1.8;
+  display:flex;
+  overflow-x:hidden;
+}
+
+/* Grid bg */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(52,211,153,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(52,211,153,0.03) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;z-index:0;
+}
+
+/* ── SIDEBAR ── */
+#sidebar{
+  width:var(--sidebar);
+  min-height:100vh;
+  position:fixed;top:0;left:0;bottom:0;
+  background:var(--s1);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  z-index:100;
+  overflow-y:auto;
+  transition:transform 0.3s ease;
+}
+
+.sidebar-logo{
+  padding:28px 24px 20px;
+  border-bottom:1px solid var(--border);
+}
+
+.sidebar-logo-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.2em;
+  color:var(--em);text-transform:uppercase;
+  margin-bottom:6px;
+}
+
+.sidebar-logo-sub{
+  font-family:'Playfair Display',serif;
+  font-size:17px;font-weight:700;
+  line-height:1.2;color:var(--text);
+}
+
+/* Progress bar */
+#progress-bar{
+  height:2px;
+  background:linear-gradient(to right,var(--em),var(--em2));
+  width:0%;
+  transition:width 0.3s ease;
+  margin:0;
+}
+
+.sidebar-nav{
+  flex:1;padding:16px 0;
+}
+
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 24px;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-decoration:none;
+  position:relative;
+}
+
+.nav-item:hover{background:var(--em-faint2);}
+
+.nav-item.active{background:var(--em-faint);}
+
+.nav-item.active::before{
+  content:'';
+  position:absolute;left:0;top:0;bottom:0;
+  width:2px;background:var(--em);
+}
+
+.nav-dot{
+  width:8px;height:8px;border-radius:50%;
+  border:1px solid var(--td);
+  flex-shrink:0;transition:all 0.3s;
+}
+
+.nav-item.active .nav-dot{
+  background:var(--em);border-color:var(--em);
+  box-shadow:0 0 8px var(--em);
+}
+
+.nav-item.done .nav-dot{
+  background:var(--td);border-color:var(--td);
+}
+
+.nav-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:0.05em;
+  color:var(--td);transition:color 0.2s;
+  line-height:1.3;
+}
+
+.nav-item:hover .nav-label,
+.nav-item.active .nav-label{color:var(--em);}
+
+.sidebar-footer{
+  padding:20px 24px;
+  border-top:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.15em;
+  color:var(--td);text-transform:uppercase;
+}
+
+/* Mobile sidebar toggle */
+#menu-btn{
+  display:none;
+  position:fixed;top:16px;left:16px;z-index:200;
+  background:var(--s2);border:1px solid var(--border2);
+  color:var(--em);width:40px;height:40px;
+  align-items:center;justify-content:center;
+  cursor:pointer;font-size:18px;border-radius:2px;
+}
+
+/* ── MAIN ── */
+#main{
+  margin-left:var(--sidebar);
+  flex:1;min-width:0;
+  position:relative;z-index:1;
+}
+
+/* ── HERO ── */
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:80px 40px;
+  position:relative;overflow:hidden;
+}
+
+.hero-glow{
+  position:absolute;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(52,211,153,0.06),transparent 70%);
+  pointer-events:none;
+}
+
+.hero-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.3em;color:var(--em);
+  text-transform:uppercase;margin-bottom:24px;
+  opacity:0;animation:fadeUp 0.7s ease 0.2s forwards;
+}
+
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(48px,8vw,96px);
+  font-weight:900;line-height:0.95;
+  letter-spacing:-0.02em;margin-bottom:20px;
+  opacity:0;animation:fadeUp 0.8s ease 0.4s forwards;
+}
+
+.hero-title em{font-style:italic;color:var(--em);}
+
+.hero-sub{
+  font-size:clamp(15px,2vw,18px);color:var(--tm);
+  font-style:italic;max-width:500px;margin-bottom:48px;
+  opacity:0;animation:fadeUp 0.8s ease 0.6s forwards;
+}
+
+.hero-stats{
+  display:flex;gap:2px;flex-wrap:wrap;justify-content:center;
+  opacity:0;animation:fadeUp 0.8s ease 0.8s forwards;
+}
+
+.stat-box{
+  background:var(--s2);border:1px solid var(--border);
+  padding:20px 28px;text-align:center;min-width:120px;
+}
+
+.stat-num{
+  font-family:'Playfair Display',serif;
+  font-size:32px;font-weight:900;color:var(--em);
+  display:block;
+}
+
+.stat-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.15em;color:var(--td);
+  text-transform:uppercase;margin-top:4px;
+}
+
+.scroll-down{
+  position:absolute;bottom:32px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.2em;color:var(--td);
+  text-transform:uppercase;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  opacity:0;animation:fadeUp 0.8s ease 1.2s forwards;
+}
+
+.scroll-arrow{animation:bounce 2s ease infinite;}
+
+/* ── CHAPTER ── */
+.chapter{
+  padding:100px 60px;
+  border-bottom:1px solid var(--border);
+  max-width:960px;
+}
+
+.ch-tag{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.25em;color:var(--em);
+  text-transform:uppercase;margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+}
+
+.ch-tag::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(to right,var(--border),transparent);
+  max-width:200px;
+}
+
+.ch-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(30px,4vw,50px);
+  font-weight:900;line-height:1.05;
+  letter-spacing:-0.02em;margin-bottom:16px;
+}
+
+.ch-title em{font-style:italic;color:var(--em);}
+
+.ch-intro{
+  font-size:17px;color:var(--tm);line-height:1.75;
+  max-width:680px;margin-bottom:48px;
+  border-left:2px solid var(--border2);
+  padding-left:20px;
+}
+
+/* ── TERMINAL BOX (interactive labs) ── */
+.terminal{
+  background:var(--s1);
+  border:1px solid var(--border2);
+  border-radius:0;margin:40px 0;
+  overflow:hidden;
+}
+
+.terminal-bar{
+  background:var(--s3);
+  padding:10px 16px;
+  display:flex;align-items:center;gap:8px;
+  border-bottom:1px solid var(--border);
+}
+
+.t-dot{width:10px;height:10px;border-radius:50%;}
+.t-dot.r{background:#f87171;}
+.t-dot.y{background:#fbbf24;}
+.t-dot.g{background:var(--em);}
+
+.t-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:0.1em;color:var(--td);
+  margin-left:8px;
+}
+
+.terminal-body{padding:28px 32px;}
+
+/* ── GRID LAYOUTS ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:24px 0;}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin:24px 0;}
+
+.info-card{
+  background:var(--s2);border:1px solid var(--border);
+  padding:24px;position:relative;overflow:hidden;
+  transition:border-color 0.3s;
+}
+
+.info-card:hover{border-color:var(--border2);}
+
+.info-card::before{
+  content:'';position:absolute;top:0;left:0;
+  width:0;height:2px;background:var(--em);
+  transition:width 0.4s ease;
+}
+
+.info-card:hover::before{width:100%;}
+
+.ic-icon{font-size:24px;margin-bottom:12px;display:block;}
+
+.ic-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.2em;color:var(--em);
+  text-transform:uppercase;margin-bottom:6px;
+}
+
+.ic-title{
+  font-family:'Playfair Display',serif;
+  font-size:19px;font-weight:700;margin-bottom:8px;
+}
+
+.ic-text{font-size:14px;color:var(--tm);line-height:1.65;}
+
+/* ── PULL QUOTE ── */
+.pullquote{
+  border-left:3px solid var(--em);
+  padding:20px 28px;margin:36px 0;
+  background:var(--em-faint2);
+  position:relative;
+}
+
+.pullquote p{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(18px,2vw,22px);
+  font-style:italic;font-weight:400;
+  line-height:1.45;color:var(--text);
+}
+
+.pullquote cite{
+  display:block;margin-top:10px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.15em;
+  color:var(--em);text-transform:uppercase;
+  font-style:normal;
+}
+
+/* ── FACT BOX ── */
+.fact-box{
+  background:var(--s2);
+  border:1px solid var(--em);
+  padding:20px 24px;margin:24px 0;
+  display:flex;gap:16px;align-items:flex-start;
+}
+
+.fact-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+
+.fact-text{font-size:14px;color:var(--tm);line-height:1.6;}
+
+.fact-text strong{color:var(--em);}
+
+/* ── ACCORDION ── */
+.accordion{margin:24px 0;}
+
+.acc-item{
+  border:1px solid var(--border);margin-bottom:2px;
+  overflow:hidden;
+}
+
+.acc-header{
+  padding:16px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;background:var(--s2);
+  transition:background 0.2s;
+  user-select:none;
+}
+
+.acc-header:hover{background:var(--s3);}
+
+.acc-title-text{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;letter-spacing:0.05em;color:var(--em);
+}
+
+.acc-arrow{
+  font-family:'JetBrains Mono',monospace;
+  color:var(--td);font-size:12px;
+  transition:transform 0.3s;
+}
+
+.acc-item.open .acc-arrow{transform:rotate(180deg);}
+
+.acc-body{
+  max-height:0;overflow:hidden;
+  transition:max-height 0.4s ease;
+  background:var(--s1);
+}
+
+.acc-inner{
+  padding:20px 24px;
+  font-size:14.5px;color:var(--tm);line-height:1.7;
+}
+
+.acc-inner p+p{margin-top:12px;}
+
+/* ── QUIZ ── */
+.quiz-box{
+  background:var(--s2);
+  border:1px solid var(--border2);
+  padding:28px 32px;margin:40px 0;
+}
+
+.quiz-title{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.2em;color:var(--em);
+  text-transform:uppercase;margin-bottom:16px;
+}
+
+.quiz-q{
+  font-family:'Playfair Display',serif;
+  font-size:20px;font-weight:700;
+  margin-bottom:20px;line-height:1.3;
+}
+
+.quiz-options{display:flex;flex-direction:column;gap:8px;}
+
+.quiz-opt{
+  background:var(--s1);border:1px solid var(--border);
+  padding:12px 18px;cursor:pointer;
+  font-family:'JetBrains Mono',monospace;font-size:13px;
+  color:var(--tm);letter-spacing:0.03em;
+  transition:all 0.2s;display:flex;align-items:center;gap:10px;
+}
+
+.quiz-opt:hover{border-color:var(--border2);color:var(--em);}
+.quiz-opt.correct{border-color:var(--em);background:var(--em-faint);color:var(--em);}
+.quiz-opt.wrong{border-color:var(--red);background:rgba(248,113,113,0.07);color:var(--red);}
+
+.quiz-opt-key{
+  width:22px;height:22px;border-radius:2px;
+  background:var(--s3);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;flex-shrink:0;
+}
+
+.quiz-feedback{
+  margin-top:14px;padding:12px 16px;
+  font-size:14px;border-radius:0;display:none;
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  letter-spacing:0.05em;
+}
+
+.quiz-feedback.show{display:block;}
+.quiz-feedback.correct{background:var(--em-faint);border:1px solid var(--em);color:var(--em2);}
+.quiz-feedback.wrong{background:rgba(248,113,113,0.07);border:1px solid var(--red);color:var(--red);}
+
+/* ── INTERACTIVE ELEMENTS ── */
+
+/* Binary switches */
+.bit-switches{
+  display:flex;gap:8px;justify-content:center;
+  flex-wrap:wrap;margin:20px 0;
+}
+
+.bit-switch{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+
+.bit-btn{
+  width:56px;height:80px;
+  background:var(--s3);
+  border:2px solid var(--border);
+  cursor:pointer;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:4px;transition:all 0.2s;
+  position:relative;overflow:hidden;
+}
+
+.bit-btn.on{
+  border-color:var(--em);
+  background:var(--em-faint);
+  box-shadow:var(--glow);
+}
+
+.bit-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:24px;font-weight:700;
+  color:var(--td);transition:color 0.2s;
+}
+
+.bit-btn.on .bit-val{color:var(--em);}
+
+.bit-pow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8px;color:var(--td);letter-spacing:0.05em;
+}
+
+.bit-pos{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;color:var(--td);letter-spacing:0.05em;
+}
+
+.binary-result-box{
+  background:var(--s3);border:1px solid var(--border);
+  padding:20px 28px;text-align:center;margin-top:20px;
+}
+
+.binary-result-num{
+  font-family:'Playfair Display',serif;
+  font-size:56px;font-weight:900;color:var(--em);
+  line-height:1;
+}
+
+.binary-result-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.2em;color:var(--td);
+  text-transform:uppercase;margin-top:8px;
+}
+
+.binary-result-sub{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;color:var(--td);margin-top:6px;
+}
+
+/* Base converter */
+.base-input{
+  width:100%;background:var(--s3);
+  border:1px solid var(--border2);
+  color:var(--em);
+  font-family:'JetBrains Mono',monospace;
+  font-size:28px;font-weight:700;
+  padding:16px 20px;outline:none;
+  text-align:center;
+  transition:border-color 0.2s;
+}
+
+.base-input:focus{border-color:var(--em);box-shadow:var(--glow);}
+
+.base-outputs{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:2px;margin-top:2px;
+}
+
+.base-output{
+  background:var(--s3);border:1px solid var(--border);
+  padding:16px 20px;
+}
+
+.base-output-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.2em;color:var(--td);
+  text-transform:uppercase;margin-bottom:6px;
+}
+
+.base-output-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:18px;font-weight:600;color:var(--em2);
+  word-break:break-all;line-height:1.4;
+}
+
+/* ASCII converter */
+.ascii-input{
+  width:100%;background:var(--s3);
+  border:1px solid var(--border2);
+  color:var(--text);
+  font-family:'JetBrains Mono',monospace;
+  font-size:18px;padding:14px 18px;
+  outline:none;
+  transition:border-color 0.2s;
+}
+
+.ascii-input:focus{border-color:var(--em);}
+
+.ascii-chars{
+  display:flex;gap:6px;flex-wrap:wrap;margin-top:16px;
+}
+
+.ascii-char-block{
+  background:var(--s3);border:1px solid var(--border);
+  padding:10px 12px;text-align:center;min-width:52px;
+  transition:border-color 0.2s;
+}
+
+.ascii-char-block:hover{border-color:var(--border2);}
+
+.acb-char{
+  font-family:'Playfair Display',serif;
+  font-size:22px;font-weight:700;color:var(--em);
+  display:block;margin-bottom:4px;
+}
+
+.acb-dec{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:var(--td);display:block;
+}
+
+.acb-bin{
+  font-family:'JetBrains Mono',monospace;
+  font-size:8px;color:var(--td);display:block;
+  word-break:break-all;line-height:1.3;
+}
+
+/* Logic gates */
+.gate-area{
+  display:grid;grid-template-columns:1fr auto 1fr;
+  gap:32px;align-items:center;margin:16px 0;
+}
+
+.gate-inputs{
+  display:flex;flex-direction:column;gap:12px;
+}
+
+.gate-input-row{
+  display:flex;align-items:center;gap:12px;
+}
+
+.gate-toggle{
+  width:48px;height:48px;
+  border:2px solid var(--border2);
+  background:var(--s3);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  font-family:'JetBrains Mono',monospace;
+  font-size:18px;font-weight:700;
+  color:var(--td);transition:all 0.2s;
+  user-select:none;
+}
+
+.gate-toggle.on{
+  border-color:var(--em);
+  background:var(--em-faint);
+  color:var(--em);
+  box-shadow:var(--glow);
+}
+
+.gate-label-text{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--td);letter-spacing:0.1em;
+}
+
+.gate-symbol{
+  background:var(--s3);border:2px solid var(--border2);
+  padding:20px 28px;text-align:center;
+  min-width:100px;
+}
+
+.gate-symbol-name{
+  font-family:'Playfair Display',serif;
+  font-size:22px;font-weight:900;color:var(--em);
+  display:block;
+}
+
+.gate-symbol-op{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:var(--td);letter-spacing:0.1em;
+  text-transform:uppercase;margin-top:4px;display:block;
+}
+
+.gate-output-box{
+  background:var(--s3);border:2px solid var(--border);
+  padding:24px;text-align:center;
+  transition:all 0.3s;
+}
+
+.gate-output-box.on{
+  border-color:var(--em);
+  box-shadow:var(--glow);
+}
+
+.gate-output-num{
+  font-family:'Playfair Display',serif;
+  font-size:48px;font-weight:900;color:var(--td);
+  transition:color 0.3s;line-height:1;
+}
+
+.gate-output-box.on .gate-output-num{color:var(--em);}
+
+.gate-output-state{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.2em;color:var(--td);
+  text-transform:uppercase;margin-top:6px;
+  transition:color 0.3s;
+}
+
+.gate-output-box.on .gate-output-state{color:var(--em);}
+
+.gate-select{
+  display:flex;gap:2px;margin-bottom:20px;flex-wrap:wrap;
+}
+
+.gate-btn{
+  background:var(--s3);border:1px solid var(--border);
+  color:var(--td);font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
+  padding:8px 16px;cursor:pointer;transition:all 0.2s;
+}
+
+.gate-btn:hover{border-color:var(--border2);color:var(--em);}
+.gate-btn.active{border-color:var(--em);color:var(--em);background:var(--em-faint);}
+
+.truth-table{
+  width:100%;border-collapse:collapse;
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  margin-top:20px;
+}
+
+.truth-table th{
+  background:var(--s3);color:var(--em);
+  font-size:9px;letter-spacing:0.15em;text-transform:uppercase;
+  padding:10px 14px;border:1px solid var(--border);text-align:left;
+}
+
+.truth-table td{
+  padding:8px 14px;border:1px solid var(--border);
+  color:var(--tm);
+}
+
+.truth-table tr.highlight td{
+  background:var(--em-faint);color:var(--em);
+}
+
+/* Pixel color mixer */
+.rgb-mixer{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:24px;align-items:start;
+}
+
+.rgb-sliders{display:flex;flex-direction:column;gap:16px;}
+
+.rgb-row{display:flex;flex-direction:column;gap:6px;}
+
+.rgb-row-label{
+  display:flex;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.1em;
+}
+
+.rgb-row-label span:first-child{color:var(--td);text-transform:uppercase;}
+.rgb-row-label span:last-child{color:var(--em);}
+
+input[type=range]{
+  -webkit-appearance:none;width:100%;
+  height:4px;outline:none;border-radius:2px;
+  cursor:pointer;
+}
+
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--em);cursor:pointer;
+  border:2px solid var(--bg);
+}
+
+.rgb-r input[type=range]{background:linear-gradient(to right,#111,#f87171);}
+.rgb-g input[type=range]{background:linear-gradient(to right,#111,#4ade80);}
+.rgb-b input[type=range]{background:linear-gradient(to right,#111,#60a5fa);}
+
+.color-preview{
+  aspect-ratio:1;min-height:180px;
+  border:1px solid var(--border);
+  transition:background 0.1s;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-end;
+  padding:16px;
+}
+
+.color-preview-hex{
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;letter-spacing:0.1em;
+  padding:6px 12px;
+  background:rgba(0,0,0,0.5);color:#fff;
+}
+
+.color-binary-display{
+  margin-top:16px;
+  background:var(--s3);border:1px solid var(--border);
+  padding:14px 18px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--td);letter-spacing:0.05em;
+  line-height:1.8;
+}
+
+/* Neural net */
+.nn-container{
+  position:relative;
+  width:100%;height:300px;
+  overflow:hidden;
+}
+
+#nn-canvas{width:100%;height:100%;}
+
+.nn-controls{
+  display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;
+}
+
+.nn-btn{
+  background:var(--s3);border:1px solid var(--border);
+  color:var(--td);font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:0.1em;
+  padding:8px 18px;cursor:pointer;transition:all 0.2s;
+}
+
+.nn-btn:hover{border-color:var(--em);color:var(--em);}
+
+.nn-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.15em;color:var(--td);
+  text-transform:uppercase;text-align:center;
+  margin-top:8px;
+}
+
+/* Attention heatmap */
+.attn-matrix{
+  overflow-x:auto;
+}
+
+.attn-words-row{
+  display:flex;gap:12px;flex-wrap:wrap;
+  margin-bottom:20px;
+}
+
+.attn-word{
+  font-family:'Playfair Display',serif;
+  font-size:18px;font-weight:700;
+  padding:8px 14px;
+  border:1px solid var(--border);
+  cursor:pointer;
+  transition:all 0.2s;user-select:none;
+  background:var(--s3);
+}
+
+.attn-word:hover{border-color:var(--border2);}
+.attn-word.selected{border-color:var(--em);background:var(--em-faint);color:var(--em);}
+
+.attn-heatmap{
+  display:inline-block;
+}
+
+.attn-row{display:flex;gap:2px;margin-bottom:2px;}
+
+.attn-cell{
+  width:52px;height:52px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:0.03em;cursor:default;
+  transition:all 0.3s;
+  position:relative;
+}
+
+.attn-row-label{
+  width:70px;display:flex;align-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--td);padding-right:8px;justify-content:flex-end;
+}
+
+.attn-col-labels{
+  display:flex;gap:2px;margin-bottom:2px;padding-left:78px;
+}
+
+.attn-col-label{
+  width:52px;text-align:center;
+  font-family:'JetBrains Mono',monospace;font-size:9px;
+  color:var(--td);letter-spacing:0.05em;padding-bottom:4px;
+}
+
+/* Token generator */
+.token-prompt{
+  background:var(--s3);border:1px solid var(--border);
+  padding:16px 20px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;color:var(--tm);
+  line-height:1.8;letter-spacing:0.03em;
+  margin-bottom:16px;min-height:80px;
+}
+
+.token-generated{color:var(--em);}
+
+.token-cursor{
+  display:inline-block;width:2px;height:14px;
+  background:var(--em);animation:blink 1s step-end infinite;
+  vertical-align:middle;margin-left:2px;
+}
+
+.token-probs{
+  display:flex;flex-direction:column;gap:6px;margin:16px 0;
+}
+
+.token-prob-row{
+  display:flex;align-items:center;gap:10px;
+}
+
+.token-prob-word{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;color:var(--tm);
+  width:120px;flex-shrink:0;letter-spacing:0.05em;
+}
+
+.token-prob-bar-wrap{
+  flex:1;height:20px;background:var(--s3);
+  border:1px solid var(--border);overflow:hidden;
+}
+
+.token-prob-bar{
+  height:100%;background:var(--em);
+  transition:width 0.4s ease;
+}
+
+.token-prob-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:var(--td);width:44px;
+  text-align:right;
+}
+
+.temp-control{
+  display:flex;align-items:center;gap:16px;margin:16px 0;
+}
+
+.temp-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.15em;
+  color:var(--td);text-transform:uppercase;
+  white-space:nowrap;
+}
+
+.temp-val{
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;color:var(--em);font-weight:600;
+  width:36px;
+}
+
+input[type=range]#temp-slider{
+  background:linear-gradient(to right,var(--blue),var(--em),var(--red));
+}
+
+/* Packet routing */
+.packet-net{
+  position:relative;width:100%;height:260px;
+  background:var(--s3);border:1px solid var(--border);
+  overflow:hidden;
+}
+
+#pkt-canvas{width:100%;height:100%;}
+
+.pkt-controls{
+  display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;
+}
+
+/* Timeline */
+.timeline{
+  position:relative;padding-left:40px;
+  margin:32px 0;
+}
+
+.timeline::before{
+  content:'';position:absolute;left:12px;top:0;bottom:0;
+  width:1px;background:var(--border);
+}
+
+.tl-item{
+  position:relative;margin-bottom:28px;
+  opacity:0;transform:translateX(-10px);
+  transition:all 0.5s ease;
+}
+
+.tl-item.visible{opacity:1;transform:translateX(0);}
+
+.tl-dot{
+  position:absolute;left:-34px;top:4px;
+  width:12px;height:12px;border-radius:50%;
+  background:var(--s3);border:2px solid var(--em);
+}
+
+.tl-year{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.2em;color:var(--em);
+  text-transform:uppercase;margin-bottom:4px;
+}
+
+.tl-title{
+  font-family:'Playfair Display',serif;
+  font-size:18px;font-weight:700;margin-bottom:4px;
+}
+
+.tl-desc{
+  font-size:14px;color:var(--tm);line-height:1.6;
+}
+
+/* Person card */
+.person-card{
+  background:var(--s2);border:1px solid var(--border);
+  padding:24px;display:flex;gap:20px;
+  align-items:flex-start;margin:20px 0;
+  transition:border-color 0.2s;
+}
+
+.person-card:hover{border-color:var(--border2);}
+
+.person-avatar{
+  width:60px;height:60px;border-radius:50%;
+  background:var(--s3);border:2px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;flex-shrink:0;
+}
+
+.person-name{
+  font-family:'Playfair Display',serif;
+  font-size:19px;font-weight:700;margin-bottom:2px;
+}
+
+.person-dates{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.1em;color:var(--em);
+  margin-bottom:8px;
+}
+
+.person-desc{
+  font-size:14px;color:var(--tm);line-height:1.65;
+}
+
+/* CPU diagram */
+.cpu-steps{
+  display:flex;gap:2px;margin:20px 0;flex-wrap:wrap;
+}
+
+.cpu-step{
+  flex:1;min-width:120px;
+  background:var(--s3);border:1px solid var(--border);
+  padding:20px 16px;text-align:center;
+  cursor:pointer;transition:all 0.3s;position:relative;
+}
+
+.cpu-step.active{
+  border-color:var(--em);
+  background:var(--em-faint);
+}
+
+.cpu-step-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:0.2em;color:var(--em);
+  margin-bottom:8px;
+}
+
+.cpu-step-name{
+  font-family:'Playfair Display',serif;
+  font-size:15px;font-weight:700;margin-bottom:6px;
+}
+
+.cpu-step-desc{
+  font-size:12px;color:var(--tm);line-height:1.5;
+}
+
+.cpu-step-arrow{
+  position:absolute;right:-12px;top:50%;
+  transform:translateY(-50%);
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;color:var(--em);z-index:1;
+}
+
+.cpu-animation{
+  background:var(--s3);border:1px solid var(--border);
+  padding:16px 20px;margin-top:12px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  color:var(--em);letter-spacing:0.05em;
+  min-height:44px;
+}
+
+/* Buttons */
+.btn{
+  background:transparent;border:1px solid var(--border2);
+  color:var(--em);font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:0.15em;text-transform:uppercase;
+  padding:10px 22px;cursor:pointer;transition:all 0.2s;
+}
+
+.btn:hover{background:var(--em-faint);border-color:var(--em);}
+
+.btn-solid{
+  background:var(--em);color:var(--bg);
+  border:1px solid var(--em);
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:0.15em;text-transform:uppercase;
+  padding:10px 22px;cursor:pointer;transition:all 0.2s;
+  font-weight:700;
+}
+
+.btn-solid:hover{background:var(--em2);}
+
+/* Comparison table */
+.compare-table{
+  width:100%;border-collapse:collapse;
+  margin:20px 0;
+}
+
+.compare-table th{
+  background:var(--s3);
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.15em;color:var(--em);
+  text-transform:uppercase;padding:12px 16px;
+  border:1px solid var(--border);text-align:left;
+}
+
+.compare-table td{
+  padding:12px 16px;border:1px solid var(--border);
+  font-size:14px;color:var(--tm);
+}
+
+.compare-table tr:hover td{background:var(--em-faint2);}
+
+/* ── STACK FINALE ── */
+#finale{
+  padding:100px 60px;
+  background:var(--s1);
+  border-top:1px solid var(--border2);
+}
+
+.stack-final{
+  display:flex;flex-direction:column;gap:2px;
+  max-width:680px;margin:40px auto;
+}
+
+.sf-layer{
+  display:flex;align-items:center;gap:0;
+  opacity:0;transform:translateY(8px);
+  transition:opacity 0.5s ease,transform 0.5s ease;
+}
+
+.sf-layer.visible{opacity:1;transform:translateY(0);}
+
+.sf-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:var(--td);
+  width:32px;text-align:right;padding-right:12px;
+  flex-shrink:0;
+}
+
+.sf-bar{
+  flex:1;background:var(--s2);border:1px solid var(--border);
+  padding:14px 20px;display:flex;
+  justify-content:space-between;align-items:center;
+  transition:all 0.2s;position:relative;overflow:hidden;
+}
+
+.sf-bar:hover{border-color:var(--border2);}
+
+.sf-bar::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:0;background:var(--em);transition:width 0.4s;
+}
+
+.sf-bar:hover::before{width:2px;}
+
+.sf-name{
+  font-family:'Playfair Display',serif;
+  font-size:16px;font-weight:700;position:relative;z-index:1;
+}
+
+.sf-year{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:var(--td);position:relative;z-index:1;
+}
+
+.sf-layer:last-child .sf-bar{
+  border-color:var(--em);background:var(--em-faint);
+}
+
+.sf-layer:last-child .sf-name{color:var(--em);}
+.sf-layer:last-child .sf-year{color:var(--em);}
+
+.sf-connector{
+  width:32px;display:flex;justify-content:flex-end;
+  padding-right:12px;
+}
+
+.sf-line{
+  width:1px;height:20px;
+  background:linear-gradient(to bottom,var(--border),transparent);
+}
+
+/* Footer */
+.guide-end{
+  text-align:center;padding:80px 40px;
+  border-top:1px solid var(--border);
+}
+
+.end-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(36px,5vw,64px);
+  font-weight:900;margin-bottom:20px;
+}
+
+.end-title em{font-style:italic;color:var(--em);}
+
+.end-text{
+  font-size:16px;color:var(--tm);
+  font-style:italic;max-width:460px;margin:0 auto 40px;
+}
+
+.end-mono{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:0.2em;color:var(--td);
+  text-transform:uppercase;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(14px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes bounce{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(6px);}
+}
+
+@keyframes blink{
+  0%,100%{opacity:1;}50%{opacity:0;}
+}
+
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 8px rgba(52,211,153,0.3);}
+  50%{box-shadow:0 0 20px rgba(52,211,153,0.6);}
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  :root{--sidebar:0px}
+  #sidebar{transform:translateX(-260px);width:260px;}
+  #sidebar.open{transform:translateX(0);}
+  #menu-btn{display:flex;}
+  #main{margin-left:0;}
+  .chapter{padding:70px 24px;}
+  .two-col,.three-col{grid-template-columns:1fr;}
+  .gate-area{grid-template-columns:1fr;gap:16px;}
+  .rgb-mixer{grid-template-columns:1fr;}
+  #finale{padding:70px 24px;}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-title">Interactive Guide</div>
+    <div class="sidebar-logo-sub">From Counting<br>to AI</div>
+  </div>
+  <div id="progress-bar"></div>
+  <div class="sidebar-nav">
+    <a class="nav-item active" href="#hero" onclick="closeSidebar()">
+      <div class="nav-dot"></div>
+      <div class="nav-label">Introduction</div>
+    </a>
+    <a class="nav-item" href="#ch1" onclick="closeSidebar()">
+      <div class="nav-dot"></div>
+      <div class="nav-label">01 — Numbers & Symbols</div>
+    </a>
+    <a class="nav-item" href="#ch2" onclick="closeSidebar()">
+      <div class="nav-dot"></div>
+      <div class="nav-label">02 — Binary & Bits</div>
+    </a>
+    <a class="nav-item" href="#ch3" onclick="closeSidebar()">
+      <div class="nav-dot"></div>
+      <div class="nav-label">03 — Logic Gates</div>
+    </a>
+    <a class="nav-item" href="#ch4" onclick="closeSidebar()">
+      <div class="nav-dot"></div>
+      <div class="nav-label">04 — Transistors & Chips</div>
+    </a>
+    <a class="nav-item" href="#ch5" onclick="closeSidebar()">
+      <div class="nav-dot"></div>
+      <div class="nav-label">05 — How CPUs Work</div>
+    </a>
+    <a class="nav-item" href="#ch6" onclick="closeSidebar()">
+      <div class="nav-dot"></div>
+      <div class="nav-label">06 — The Internet</div>
+    </a>
+    <a class="nav-item" href="#ch7" onclick="closeSidebar()">
+      <div class="nav-dot"></div>
+      <div class="nav-label">07 — The Web</div>
+    </a>
+    <a class="nav-item" href="#ch8" onclick="closeSidebar()">
+      <div class="nav-dot"></div>
+      <div class="nav-label">08 — Neural Networks</div>
+    </a>
+    <a class="nav-item" href="#ch9" onclick="closeSidebar()">
+      <div class="nav-dot"></div>
+      <div class="nav-label">09 — Transformers</div>
+    </a>
+    <a class="nav-item" href="#ch10" onclick="closeSidebar()">
+      <div class="nav-dot"></div>
+      <div class="nav-label">10 — LLMs in Action</div>
+    </a>
+    <a class="nav-item" href="#finale" onclick="closeSidebar()">
+      <div class="nav-dot"></div>
+      <div class="nav-label">The Full Stack</div>
+    </a>
+  </div>
+  <div class="sidebar-footer">Both magnificent &amp; slightly alarming.</div>
+</nav>
+
+<button id="menu-btn" onclick="toggleSidebar()">☰</button>
+
+<!-- MAIN -->
+<div id="main">
+
+<!-- ══════ HERO ══════ -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-eyebrow">A Deep Interactive Guide · Computing &amp; AI</div>
+  <h1 class="hero-title">From<br><em>Counting Sticks</em><br>to AI</h1>
+  <p class="hero-sub">10 interactive chapters covering every layer humanity built — from ancient tally marks to large language models</p>
+  <div class="hero-stats">
+    <div class="stat-box">
+      <span class="stat-num">10</span>
+      <div class="stat-label">Chapters</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">9</span>
+      <div class="stat-label">Live Labs</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">~3000</span>
+      <div class="stat-label">Years of History</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">∞</span>
+      <div class="stat-label">Layers of Abstraction</div>
+    </div>
+  </div>
+  <div class="scroll-down">
+    <span>Scroll to begin</span>
+    <span class="scroll-arrow">↓</span>
+  </div>
+</section>
+
+<!-- ══════ CH1: NUMBERS ══════ -->
+<section id="ch1" class="chapter">
+  <div class="ch-tag">Chapter 01 — The Foundation</div>
+  <h2 class="ch-title">Numbers, Symbols,<br>and <em>Why Abstraction Matters</em></h2>
+  <p class="ch-intro">Before electricity, before silicon, before software — humanity had one urgent civilizational problem: how do we represent, store, and manipulate quantities? The solution they found laid the foundation for every computer ever built.</p>
+
+  <div class="timeline" id="tl1">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">~30,000 BCE</div>
+      <div class="tl-title">Tally Marks</div>
+      <div class="tl-desc">The Ishango bone (found in Congo) shows notches carved in groups — possibly the earliest evidence of counting. One mark = one thing. No symbols, no place value, just raw correspondence.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">~3000 BCE</div>
+      <div class="tl-title">Sumerian Cuneiform Numbers</div>
+      <div class="tl-desc">The Sumerians developed a base-60 (sexagesimal) system — which is why we still have 60 seconds in a minute and 360 degrees in a circle. Symbols pressed into clay tablets.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">~200 BCE</div>
+      <div class="tl-title">Indian Decimal System</div>
+      <div class="tl-desc">Indian mathematicians developed the base-10 place-value system and, crucially, the concept of zero as a number — not just an absence. This single invention made all advanced mathematics possible.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">~820 CE</div>
+      <div class="tl-title">Al-Khwarizmi spreads the system</div>
+      <div class="tl-desc">The Persian mathematician wrote "Al-Kitāb al-mukhtaṣar fī ḥisāb al-jabr" — the origin of the word "algebra." His work spread Indian numerals to the Arab world, and then Europe. "Algorithm" comes from his name.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1847</div>
+      <div class="tl-title">George Boole — The Algebra of Logic</div>
+      <div class="tl-desc">Boole published "The Mathematical Analysis of Logic," proving that logical reasoning could be expressed as algebra using only 0 and 1. This became the direct mathematical foundation of all digital computing.</div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE: Base Converter -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+      <div class="t-title">lab_01.sh — Number Base Converter</div>
+    </div>
+    <div class="terminal-body">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td);letter-spacing:0.1em;margin-bottom:12px;">$ TYPE A NUMBER (0–65535) TO SEE IT IN EVERY BASE</p>
+      <input type="number" class="base-input" id="base-input" min="0" max="65535" value="255" placeholder="Type any number...">
+      <div class="base-outputs">
+        <div class="base-output">
+          <div class="base-output-label">Base 10 · Decimal</div>
+          <div class="base-output-val" id="b10">255</div>
+        </div>
+        <div class="base-output">
+          <div class="base-output-label">Base 2 · Binary</div>
+          <div class="base-output-val" id="b2">11111111</div>
+        </div>
+        <div class="base-output">
+          <div class="base-output-label">Base 8 · Octal</div>
+          <div class="base-output-val" id="b8">377</div>
+        </div>
+        <div class="base-output">
+          <div class="base-output-label">Base 16 · Hexadecimal</div>
+          <div class="base-output-val" id="b16">FF</div>
+        </div>
+        <div class="base-output">
+          <div class="base-output-label">Bits Required</div>
+          <div class="base-output-val" id="bbits">8</div>
+        </div>
+        <div class="base-output">
+          <div class="base-output-label">ASCII Character</div>
+          <div class="base-output-val" id="bascii">ÿ</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pullquote">
+    <p>There is nothing naturally "one-ish" about the symbol 1. Humans collectively agreed it represents an idea. Computers inherited this entire concept — that symbols can represent reality.</p>
+    <cite>The foundation of computing</cite>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-title">⬡ Quick Check</div>
+    <div class="quiz-q">Why did Indian mathematicians' invention of zero matter so much for computing?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><span class="quiz-opt-key">A</span> Zero let people count backwards</div>
+      <div class="quiz-opt" onclick="answer(this,'correct')"><span class="quiz-opt-key">B</span> Zero as a positional placeholder made place-value notation and binary logic possible</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><span class="quiz-opt-key">C</span> It replaced Roman numerals immediately</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><span class="quiz-opt-key">D</span> Zero was needed for negative numbers first</div>
+    </div>
+    <div class="quiz-feedback" id="qf1"></div>
+  </div>
+</section>
+
+<!-- ══════ CH2: BINARY ══════ -->
+<section id="ch2" class="chapter">
+  <div class="ch-tag">Chapter 02 — The Language of Machines</div>
+  <h2 class="ch-title">Binary:<br><em>Everything is 0s and 1s</em></h2>
+  <p class="ch-intro">Computers use binary not because engineers are sadistic, but because physical systems naturally have two stable states: a switch is on or off, a capacitor is charged or uncharged, voltage is high or low. Binary maps perfectly onto this physical reality.</p>
+
+  <div class="three-col">
+    <div class="info-card">
+      <span class="ic-icon">🔌</span>
+      <div class="ic-label">Physical Reality</div>
+      <div class="ic-title">Voltage States</div>
+      <p class="ic-text">Modern logic uses ~0V for "0" and ~3.3V or 5V for "1". Detecting two states is far more reliable than detecting ten — noise margins are huge.</p>
+    </div>
+    <div class="info-card">
+      <span class="ic-icon">🧮</span>
+      <div class="ic-label">Mathematical Power</div>
+      <div class="ic-title">Boolean Algebra</div>
+      <p class="ic-text">George Boole's 1847 system proved that all logical reasoning — AND, OR, NOT — can be expressed with just two symbols. Shannon applied this to circuits in 1937.</p>
+    </div>
+    <div class="info-card">
+      <span class="ic-icon">📦</span>
+      <div class="ic-label">Universality</div>
+      <div class="ic-title">Everything Becomes Bits</div>
+      <p class="ic-text">Text, images, audio, video, code, 3D models — all ultimately reduce to sequences of 1s and 0s. This universality is what makes general-purpose computers possible.</p>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE: 8-bit toggle switches -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+      <div class="t-title">lab_02a.sh — 8-Bit Switch Panel</div>
+    </div>
+    <div class="terminal-body">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td);letter-spacing:0.1em;margin-bottom:20px;">$ CLICK SWITCHES TO TOGGLE BITS — WATCH THE DECIMAL VALUE CHANGE</p>
+      <div class="bit-switches" id="bit-switches">
+        <!-- Generated by JS -->
+      </div>
+      <div class="binary-result-box">
+        <div class="binary-result-num" id="bit-decimal">0</div>
+        <div class="binary-result-label">Decimal Value</div>
+        <div class="binary-result-sub" id="bit-hex">Hex: 0x00 · Char: NUL</div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn" onclick="setBits(255)">Set All ON (255)</button>
+        <button class="btn" onclick="setBits(0)">Clear All (0)</button>
+        <button class="btn" onclick="setBits(170)">Alternating (10101010)</button>
+        <button class="btn" onclick="setBits(Math.floor(Math.random()*256))">Random</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE: ASCII visualizer -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+      <div class="t-title">lab_02b.sh — Text to Binary (ASCII)</div>
+    </div>
+    <div class="terminal-body">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td);letter-spacing:0.1em;margin-bottom:12px;">$ TYPE TEXT — SEE EACH CHARACTER AS DECIMAL AND 8-BIT BINARY</p>
+      <input type="text" class="ascii-input" id="ascii-input" maxlength="12" value="Hello" placeholder="Type text here...">
+      <div class="ascii-chars" id="ascii-output"></div>
+    </div>
+  </div>
+
+  <!-- RGB Pixel demo -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+      <div class="t-title">lab_02c.sh — Pixel Color Mixer (RGB)</div>
+    </div>
+    <div class="terminal-body">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td);letter-spacing:0.1em;margin-bottom:20px;">$ EVERY PIXEL IS 3 NUMBERS (RED, GREEN, BLUE) — EACH IS ONE BYTE (0–255)</p>
+      <div class="rgb-mixer">
+        <div class="rgb-sliders">
+          <div class="rgb-row rgb-r">
+            <div class="rgb-row-label"><span>Red (R)</span><span id="rv">128</span></div>
+            <input type="range" min="0" max="255" value="128" id="rs" oninput="updateRGB()">
+          </div>
+          <div class="rgb-row rgb-g">
+            <div class="rgb-row-label"><span>Green (G)</span><span id="gv">200</span></div>
+            <input type="range" min="0" max="255" value="200" id="gs" oninput="updateRGB()">
+          </div>
+          <div class="rgb-row rgb-b">
+            <div class="rgb-row-label"><span>Blue (B)</span><span id="bv">80</span></div>
+            <input type="range" min="0" max="255" value="80" id="bs" oninput="updateRGB()">
+          </div>
+          <div class="color-binary-display" id="color-binary">
+            R: 10000000 · G: 11001000 · B: 01010000<br>
+            Total: 24 bits per pixel · 3 bytes of data
+          </div>
+        </div>
+        <div>
+          <div class="color-preview" id="color-preview" style="background:rgb(128,200,80);">
+            <div class="color-preview-hex" id="color-hex">#80C850</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ CH3: LOGIC GATES ══════ -->
+<section id="ch3" class="chapter">
+  <div class="ch-tag">Chapter 03 — The Building Blocks of Computation</div>
+  <h2 class="ch-title">Logic Gates:<br><em>Where Math Meets Hardware</em></h2>
+  <p class="ch-intro">Logic gates are the fundamental units of all digital circuits. Each gate takes binary inputs and produces a binary output according to a logical rule. By combining millions of gates, you can build anything from a calculator to an AI chip.</p>
+
+  <div class="two-col">
+    <div class="info-card">
+      <div class="ic-label">Key Insight · 1937</div>
+      <div class="ic-title">Claude Shannon's Thesis</div>
+      <p class="ic-text">Claude Shannon's MIT master's thesis proved that Boolean algebra — the math of TRUE/FALSE — could be implemented with electrical relay circuits. This single 69-page paper is called "possibly the most important master's thesis of the 20th century."</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">Universal Gates</div>
+      <div class="ic-title">NAND is All You Need</div>
+      <p class="ic-text">The NAND gate (Not-AND) is "functionally complete" — any logic circuit can be built from NAND gates alone. Modern CPUs with billions of gates ultimately reduce to combinations of this single operation.</p>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE: Logic gate simulator -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+      <div class="t-title">lab_03.sh — Logic Gate Simulator</div>
+    </div>
+    <div class="terminal-body">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td);letter-spacing:0.1em;margin-bottom:16px;">$ SELECT A GATE TYPE, THEN CLICK INPUTS A AND B TO TOGGLE</p>
+      <div class="gate-select">
+        <button class="gate-btn active" onclick="setGate('AND',this)">AND</button>
+        <button class="gate-btn" onclick="setGate('OR',this)">OR</button>
+        <button class="gate-btn" onclick="setGate('NOT',this)">NOT</button>
+        <button class="gate-btn" onclick="setGate('NAND',this)">NAND</button>
+        <button class="gate-btn" onclick="setGate('NOR',this)">NOR</button>
+        <button class="gate-btn" onclick="setGate('XOR',this)">XOR</button>
+      </div>
+      <div class="gate-area">
+        <div class="gate-inputs" id="gate-inputs">
+          <div class="gate-input-row">
+            <div class="gate-toggle" id="gA" onclick="toggleGateInput('A')">0</div>
+            <div class="gate-label-text">Input A</div>
+          </div>
+          <div class="gate-input-row" id="gate-b-row">
+            <div class="gate-toggle" id="gB" onclick="toggleGateInput('B')">0</div>
+            <div class="gate-label-text">Input B</div>
+          </div>
+        </div>
+        <div class="gate-symbol">
+          <span class="gate-symbol-name" id="gate-name">AND</span>
+          <span class="gate-symbol-op" id="gate-op">A · B</span>
+        </div>
+        <div class="gate-output-box" id="gate-out-box">
+          <div class="gate-output-num" id="gate-out">0</div>
+          <div class="gate-output-state" id="gate-out-state">Output · FALSE</div>
+        </div>
+      </div>
+      <div id="gate-desc" style="font-size:13px;color:var(--tm);margin-bottom:16px;padding:10px 14px;background:var(--s3);border:1px solid var(--border);font-family:'JetBrains Mono',monospace;letter-spacing:0.03em;">
+        AND: Output is 1 only when BOTH inputs are 1. Used in: address decoding, masking operations.
+      </div>
+      <table class="truth-table" id="truth-table"></table>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <span class="acc-title-text">▸ How do gates actually add numbers?</span>
+        <span class="acc-arrow">▾</span>
+      </div>
+      <div class="acc-body">
+        <div class="acc-inner">
+          <p>A "half adder" combines an XOR gate (for the sum bit) and an AND gate (for the carry bit) to add two single bits. A "full adder" adds two bits plus a carry-in, using two half adders and an OR gate. Chain 64 full adders together and you have a 64-bit adder — the kind inside every modern CPU.</p>
+          <p>Every arithmetic operation (addition, subtraction, multiplication, division) decomposes into gate-level operations. Division is addition of negative numbers. Multiplication is repeated addition. It's gates all the way down.</p>
+        </div>
+      </div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <span class="acc-title-text">▸ What is a flip-flop? (How computers remember things)</span>
+        <span class="acc-arrow">▾</span>
+      </div>
+      <div class="acc-body">
+        <div class="acc-inner">
+          <p>A flip-flop is a circuit made from two cross-coupled NAND gates that can hold one bit of information — it "remembers" its state even after inputs change. This is the basis of all RAM (memory) and CPU registers.</p>
+          <p>Your computer's RAM is essentially billions of flip-flops. When you open a program, its code is loaded from storage into flip-flops in RAM, and the CPU reads from them at extreme speed. When power is cut, the flip-flops lose their state — that's why RAM is "volatile."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ CH4: TRANSISTORS ══════ -->
+<section id="ch4" class="chapter">
+  <div class="ch-tag">Chapter 04 — The Tiny Switch</div>
+  <h2 class="ch-title">Transistors & Chips:<br><em>The Revolution in Silicon</em></h2>
+  <p class="ch-intro">Without transistors: no computers, no internet, no smartphones, no AI. Nothing. The transistor is arguably the most important invention of the 20th century — yet most people couldn't describe what it does.</p>
+
+  <div class="two-col">
+    <div>
+      <div class="person-card">
+        <div class="person-avatar">👩‍💻</div>
+        <div>
+          <div class="person-name">Ada Lovelace</div>
+          <div class="person-dates">1815–1852</div>
+          <div class="person-desc">Often called the first programmer — she wrote an algorithm for Charles Babbage's Analytical Engine (a mechanical computer that was never built). She realized machines could manipulate symbols, not just numbers, predicting software before electricity-powered computers existed.</div>
+        </div>
+      </div>
+      <div class="person-card">
+        <div class="person-avatar">🧠</div>
+        <div>
+          <div class="person-name">Alan Turing</div>
+          <div class="person-dates">1912–1954</div>
+          <div class="person-desc">Defined the theoretical "universal computing machine" (Turing Machine) in 1936, proving that a single machine with the right program could compute anything computable. This became the theoretical model for every real computer ever built.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="person-card">
+        <div class="person-avatar">⚡</div>
+        <div>
+          <div class="person-name">Shockley, Bardeen &amp; Brattain</div>
+          <div class="person-dates">Bell Labs, 1947</div>
+          <div class="person-desc">Invented the transistor at Bell Labs. It replaced vacuum tubes with a tiny semiconductor device that could amplify or switch electrical signals. They shared the 1956 Nobel Prize in Physics. Their invention made modern computing possible.</div>
+        </div>
+      </div>
+      <div class="person-card">
+        <div class="person-avatar">📈</div>
+        <div>
+          <div class="person-name">Gordon Moore</div>
+          <div class="person-dates">1929–2023</div>
+          <div class="person-desc">Intel co-founder who observed in 1965 that transistor counts on chips doubled roughly every two years. "Moore's Law" held for over 50 years and is the reason your phone is billions of times more powerful than 1960s mainframes.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fact-box">
+    <span class="fact-icon">🔬</span>
+    <div class="fact-text">Apple's M3 Max chip (2023) contains <strong>92 billion transistors</strong> in an area about the size of a thumbnail. Each transistor is approximately <strong>3 nanometers</strong> wide — smaller than most proteins in your body. They switch on/off at speeds measured in <strong>picoseconds</strong> (trillionths of a second).</div>
+  </div>
+
+  <table class="compare-table">
+    <thead>
+      <tr><th>Era</th><th>Technology</th><th>Transistors</th><th>Speed</th><th>Power</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1946</td><td>Vacuum Tubes (ENIAC)</td><td>18,000 tubes</td><td>~100 ops/sec</td><td>150 kW</td></tr>
+      <tr><td>1955</td><td>Germanium Transistors</td><td>~100 transistors</td><td>~1 MHz</td><td>~1 W</td></tr>
+      <tr><td>1971</td><td>Intel 4004 (first CPU)</td><td>2,300</td><td>~740 kHz</td><td>~1 W</td></tr>
+      <tr><td>1993</td><td>Intel Pentium</td><td>3.1 million</td><td>~60 MHz</td><td>~15 W</td></tr>
+      <tr><td>2006</td><td>Core 2 Duo</td><td>291 million</td><td>~2.4 GHz</td><td>~65 W</td></tr>
+      <tr><td>2023</td><td>Apple M3 Max</td><td>92 billion</td><td>~4 GHz</td><td>~40 W</td></tr>
+    </tbody>
+  </table>
+
+  <div class="quiz-box">
+    <div class="quiz-title">⬡ Quick Check</div>
+    <div class="quiz-q">Why did the transistor replace the vacuum tube in computers?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><span class="quiz-opt-key">A</span> Vacuum tubes couldn't represent binary</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><span class="quiz-opt-key">B</span> Transistors were cheaper to manufacture</div>
+      <div class="quiz-opt" onclick="answer(this,'correct')"><span class="quiz-opt-key">C</span> Transistors are smaller, faster, more reliable, and use far less power</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><span class="quiz-opt-key">D</span> Government regulations banned vacuum tubes</div>
+    </div>
+    <div class="quiz-feedback" id="qf4"></div>
+  </div>
+</section>
+
+<!-- ══════ CH5: CPU ══════ -->
+<section id="ch5" class="chapter">
+  <div class="ch-tag">Chapter 05 — The Brain</div>
+  <h2 class="ch-title">How CPUs Work:<br><em>The Fetch-Decode-Execute Cycle</em></h2>
+  <p class="ch-intro">A CPU appears magical but follows a relentlessly simple loop billions of times per second: get the next instruction, figure out what it means, carry it out, store the result. Everything your computer has ever done reduces to this loop.</p>
+
+  <!-- INTERACTIVE: CPU cycle -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+      <div class="t-title">lab_05.sh — CPU Fetch-Decode-Execute Simulator</div>
+    </div>
+    <div class="terminal-body">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td);letter-spacing:0.1em;margin-bottom:20px;">$ CLICK EACH STAGE TO STEP THROUGH THE CPU CYCLE</p>
+      <div class="cpu-steps">
+        <div class="cpu-step active" onclick="cpuStep(0)" id="cs0">
+          <div class="cpu-step-num">STEP 01</div>
+          <div class="cpu-step-name">FETCH</div>
+          <div class="cpu-step-desc">Load next instruction from RAM into instruction register</div>
+          <div class="cpu-step-arrow">→</div>
+        </div>
+        <div class="cpu-step" onclick="cpuStep(1)" id="cs1">
+          <div class="cpu-step-num">STEP 02</div>
+          <div class="cpu-step-name">DECODE</div>
+          <div class="cpu-step-desc">Control unit interprets the instruction's opcode and operands</div>
+          <div class="cpu-step-arrow">→</div>
+        </div>
+        <div class="cpu-step" onclick="cpuStep(2)" id="cs2">
+          <div class="cpu-step-num">STEP 03</div>
+          <div class="cpu-step-name">EXECUTE</div>
+          <div class="cpu-step-desc">ALU performs the operation — arithmetic, logic, memory access</div>
+          <div class="cpu-step-arrow">→</div>
+        </div>
+        <div class="cpu-step" onclick="cpuStep(3)" id="cs3">
+          <div class="cpu-step-num">STEP 04</div>
+          <div class="cpu-step-name">WRITE BACK</div>
+          <div class="cpu-step-desc">Result stored in register or memory; PC advances to next instruction</div>
+        </div>
+      </div>
+      <div class="cpu-animation" id="cpu-anim">
+        ► Program Counter (PC) points to address 0x0042 in RAM — loading instruction: ADD R1, R2
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;">
+        <button class="btn-solid" onclick="cpuStep((cpuCurrent+1)%4)">Next Stage →</button>
+        <button class="btn" onclick="cpuStep(0)">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="info-card">
+      <span class="ic-icon">⚡</span>
+      <div class="ic-label">ALU</div>
+      <div class="ic-title">Arithmetic Logic Unit</div>
+      <p class="ic-text">The ALU performs all mathematical and logical operations — addition, subtraction, AND, OR, comparison. Modern CPUs have multiple ALUs running in parallel (superscalar execution).</p>
+    </div>
+    <div class="info-card">
+      <span class="ic-icon">📋</span>
+      <div class="ic-label">Registers</div>
+      <div class="ic-title">Ultra-Fast Scratch Space</div>
+      <p class="ic-text">Registers are tiny, extremely fast memory locations inside the CPU itself — access time under 1 nanosecond. A modern CPU has ~16-32 general-purpose registers, each 64 bits wide.</p>
+    </div>
+    <div class="info-card">
+      <span class="ic-icon">🗄️</span>
+      <div class="ic-label">Cache Hierarchy</div>
+      <div class="ic-title">L1 → L2 → L3 → RAM</div>
+      <p class="ic-text">L1 cache: ~4 cycles access. L2: ~12 cycles. L3: ~40 cycles. RAM: ~200+ cycles. Cache misses are the biggest performance bottleneck in modern computing.</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <span class="acc-title-text">▸ What is "clock speed" really measuring?</span>
+        <span class="acc-arrow">▾</span>
+      </div>
+      <div class="acc-body">
+        <div class="acc-inner">
+          <p>Clock speed (measured in GHz) is how many times per second the CPU's internal clock ticks. Each tick is an opportunity to complete one stage of the pipeline. At 3 GHz, the clock ticks 3 billion times per second. But a modern CPU is pipelined — it overlaps multiple instructions simultaneously, doing Fetch for instruction N+1 while Executing instruction N. A modern chip might complete 3–5 instructions per clock cycle (Instructions Per Cycle, or IPC).</p>
+          <p>This is why comparing CPUs purely by GHz is misleading. Architecture matters enormously — Apple's M-series chips execute more instructions per cycle than Intel chips at similar clock speeds, which is why they're so efficient despite lower GHz numbers.</p>
+        </div>
+      </div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <span class="acc-title-text">▸ How does a GPU differ from a CPU?</span>
+        <span class="acc-arrow">▾</span>
+      </div>
+      <div class="acc-body">
+        <div class="acc-inner">
+          <p>A CPU has a few very powerful, complex cores (typically 8–32) optimized for sequential tasks with lots of branching logic. A GPU has thousands of smaller, simpler cores optimized for doing the same operation on many data points simultaneously (SIMD — Single Instruction, Multiple Data).</p>
+          <p>Rendering pixels, physics simulation, and AI training all involve doing the same math on millions of data points at once — perfect for GPUs. Training GPT-4 required tens of thousands of NVIDIA A100 GPUs running for months. The reason AI exploded after 2012 is largely because researchers realized GPUs could train neural networks 10–50× faster than CPUs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ CH6: INTERNET ══════ -->
+<section id="ch6" class="chapter">
+  <div class="ch-tag">Chapter 06 — Connected</div>
+  <h2 class="ch-title">The Internet:<br><em>Packets, Protocols, and Routing</em></h2>
+  <p class="ch-intro">The internet isn't a single network — it's a network of networks, all agreeing to speak the same language (TCP/IP). Its genius is that it was designed to survive nuclear attack: no single point of failure, messages self-route around damage.</p>
+
+  <!-- INTERACTIVE: Packet routing -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+      <div class="t-title">lab_06.sh — Packet Routing Simulator</div>
+    </div>
+    <div class="terminal-body">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td);letter-spacing:0.1em;margin-bottom:12px;">$ CLICK "SEND PACKET" TO WATCH DATA ROUTE ACROSS THE NETWORK · CLICK A NODE TO FAIL IT</p>
+      <div class="packet-net">
+        <canvas id="pkt-canvas"></canvas>
+      </div>
+      <div class="pkt-controls">
+        <button class="btn-solid" onclick="sendPacket()">▶ Send Packet</button>
+        <button class="btn" onclick="resetPacketNet()">Reset Network</button>
+      </div>
+      <div id="pkt-log" style="margin-top:10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td);letter-spacing:0.05em;min-height:20px;"></div>
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="info-card">
+      <span class="ic-icon">📦</span>
+      <div class="ic-label">Layer 3 · IP</div>
+      <div class="ic-title">Internet Protocol</div>
+      <p class="ic-text">IP handles addressing and routing. Every device gets an IP address (like 192.168.1.1). Routers read destination addresses and forward packets toward their destination — each router only knows the next hop.</p>
+    </div>
+    <div class="info-card">
+      <span class="ic-icon">🤝</span>
+      <div class="ic-label">Layer 4 · TCP</div>
+      <div class="ic-title">Transmission Control Protocol</div>
+      <p class="ic-text">TCP adds reliability on top of IP. It breaks data into numbered packets, guarantees all arrive in order, and requests retransmission of any lost packets. The famous "3-way handshake": SYN → SYN-ACK → ACK.</p>
+    </div>
+    <div class="info-card">
+      <span class="ic-icon">🔒</span>
+      <div class="ic-label">Layer 6–7 · TLS/HTTPS</div>
+      <div class="ic-title">Encryption</div>
+      <p class="ic-text">TLS (Transport Layer Security) encrypts your data before sending. Public-key cryptography means your browser and the server can establish a shared secret without ever having met — even on an eavesdropped network.</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <span class="acc-title-text">▸ What happens in 0.2 seconds when you type google.com?</span>
+        <span class="acc-arrow">▾</span>
+      </div>
+      <div class="acc-body">
+        <div class="acc-inner">
+          <p><strong style="color:var(--em)">1. DNS Resolution (~2ms):</strong> Browser checks its cache, then asks your OS, then your ISP's DNS resolver: "What IP is google.com?" Receives 142.250.x.x back.</p>
+          <p><strong style="color:var(--em)">2. TCP Connection (~20ms):</strong> Three-way handshake with Google's server to establish a connection.</p>
+          <p><strong style="color:var(--em)">3. TLS Handshake (~20ms):</strong> Exchanging cryptographic keys, verifying Google's certificate, establishing an encrypted tunnel.</p>
+          <p><strong style="color:var(--em)">4. HTTP Request (~1ms):</strong> "GET / HTTP/2" — browser asks for the root page.</p>
+          <p><strong style="color:var(--em)">5. Server Response (~50ms):</strong> Google's servers return HTML, CSS, JavaScript. Google runs thousands of servers; your request might be handled by a different physical machine than last time.</p>
+          <p><strong style="color:var(--em)">6. Browser Rendering (~50ms):</strong> Browser parses HTML → builds DOM tree → applies CSS → runs JavaScript → paints pixels to screen. All of this before you've finished blinking.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ CH7: WEB ══════ -->
+<section id="ch7" class="chapter">
+  <div class="ch-tag">Chapter 07 — The Visual Layer</div>
+  <h2 class="ch-title">The Web:<br><em>HTML, CSS, JavaScript & Beyond</em></h2>
+  <p class="ch-intro">Tim Berners-Lee invented the World Wide Web in 1989 at CERN as a document-sharing system. What started as linked text files became the delivery platform for modern applications, games, AI interfaces, and media.</p>
+
+  <!-- INTERACTIVE: Live mini code editor -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+      <div class="t-title">lab_07.sh — Live HTML/CSS Editor</div>
+    </div>
+    <div class="terminal-body">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td);letter-spacing:0.1em;margin-bottom:16px;">$ EDIT THE CODE — PREVIEW UPDATES INSTANTLY</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--td);text-transform:uppercase;margin-bottom:6px;">Code Editor</div>
+          <textarea id="live-code" style="width:100%;height:280px;background:var(--s3);border:1px solid var(--border2);color:var(--em2);font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.7;padding:14px;resize:none;outline:none;letter-spacing:0.03em;" oninput="updatePreview()" spellcheck="false">&lt;style&gt;
+  body{font-family:sans-serif;
+    background:#1a1a2e;
+    color:#eee;padding:20px;}
+  h1{color:#34d399;
+    font-size:28px;}
+  .box{background:#16213e;
+    border:2px solid #34d399;
+    padding:16px;margin:12px 0;
+    border-radius:4px;}
+  button{background:#34d399;
+    border:none;padding:8px 16px;
+    cursor:pointer;color:#000;
+    font-weight:bold;border-radius:4px;}
+&lt;/style&gt;
+&lt;h1&gt;Hello from HTML!&lt;/h1&gt;
+&lt;div class="box"&gt;
+  &lt;p&gt;Edit this code and watch
+  the preview update live.&lt;/p&gt;
+&lt;/div&gt;
+&lt;button onclick="this.textContent=
+ 'You clicked! ✓'"&gt;
+  Click me
+&lt;/button&gt;</textarea>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.2em;color:var(--td);text-transform:uppercase;margin-bottom:6px;">Live Preview</div>
+          <iframe id="live-preview" style="width:100%;height:280px;border:1px solid var(--border);background:#fff;"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-top:24px;">
+    <div class="info-card">
+      <div class="ic-label">Evolution</div>
+      <div class="ic-title">Static → Dynamic → SPA</div>
+      <p class="ic-text"><strong style="color:var(--em)">1991:</strong> HTML — static pages, text and links.<br><strong style="color:var(--em)">1995:</strong> JavaScript — dynamic interaction.<br><strong style="color:var(--em)">2004:</strong> AJAX — pages update without reload.<br><strong style="color:var(--em)">2013:</strong> React — component-based SPAs.<br><strong style="color:var(--em)">2020s:</strong> Edge functions, SSR, hydration.</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">Enterprise Scale</div>
+      <div class="ic-title">Why AEM EDS Exists</div>
+      <p class="ic-text">At enterprise scale (like Maruti Suzuki), raw HTML/CSS/JS becomes unmanageable. AEM (Adobe Experience Manager) adds a full content management layer — editors, workflows, personalization, and global publishing pipelines — while EDS (Edge Delivery Services) optimizes delivery speed and SEO.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ CH8: NEURAL NETS ══════ -->
+<section id="ch8" class="chapter">
+  <div class="ch-tag">Chapter 08 — Learning from Data</div>
+  <h2 class="ch-title">Neural Networks:<br><em>How Machines Learn</em></h2>
+  <p class="ch-intro">Instead of programming rules, we show machines millions of examples and let them discover patterns. Neural networks — loosely inspired by biological neurons — learn by adjusting the strength of connections (weights) until they get predictions right.</p>
+
+  <div class="two-col">
+    <div class="info-card">
+      <div class="ic-label">The Perceptron · 1957</div>
+      <div class="ic-title">Frank Rosenblatt's Invention</div>
+      <p class="ic-text">The perceptron is the simplest neural network: inputs (features) are multiplied by weights, summed, and passed through an "activation function." If the sum exceeds a threshold, it fires (outputs 1). It's a single artificial neuron, inspired by how biological neurons work.</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">The Key Insight · 1986</div>
+      <div class="ic-title">Backpropagation</div>
+      <p class="ic-text">Rumelhart, Hinton, and Williams showed how to train multi-layer networks: compute the error, then propagate blame backwards through the network (using calculus), adjusting weights slightly to reduce the error. Repeat millions of times. This is how all modern neural networks learn.</p>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE: Neural network visualization -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+      <div class="t-title">lab_08.sh — Neural Network Visualization</div>
+    </div>
+    <div class="terminal-body">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td);letter-spacing:0.1em;margin-bottom:12px;">$ CLICK "FORWARD PASS" TO WATCH SIGNAL PROPAGATE THROUGH THE NETWORK</p>
+      <div class="nn-container">
+        <canvas id="nn-canvas"></canvas>
+      </div>
+      <div class="nn-label" id="nn-label">Waiting for forward pass...</div>
+      <div class="nn-controls">
+        <button class="btn-solid" onclick="runForwardPass()">▶ Forward Pass</button>
+        <button class="btn" onclick="runTrainingStep()">⟲ Training Step</button>
+        <button class="btn" onclick="resetNN()">Reset</button>
+      </div>
+      <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--td);padding:8px 10px;background:var(--s3);border:1px solid var(--border);">
+          <div style="color:var(--em);margin-bottom:2px;">Input Layer</div>
+          Receives raw features (pixels, words, numbers)
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--td);padding:8px 10px;background:var(--s3);border:1px solid var(--border);">
+          <div style="color:var(--em);margin-bottom:2px;">Hidden Layers</div>
+          Learn increasingly abstract representations
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--td);padding:8px 10px;background:var(--s3);border:1px solid var(--border);">
+          <div style="color:var(--em);margin-bottom:2px;">Output Layer</div>
+          Final prediction (class probability, next token)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="timeline" id="tl-ml">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1957</div>
+      <div class="tl-title">Perceptron (Rosenblatt)</div>
+      <div class="tl-desc">First trainable neural network. Could classify linearly separable data. Huge hype, then Minsky & Papert proved it couldn't learn XOR — causing the first "AI winter."</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">1986</div>
+      <div class="tl-title">Backpropagation popularized</div>
+      <div class="tl-desc">Rumelhart & Hinton made training multi-layer networks practical. Deep networks were suddenly possible in theory — but still too slow without sufficient hardware and data.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2012</div>
+      <div class="tl-title">AlexNet — The Deep Learning Revolution</div>
+      <div class="tl-desc">Krizhevsky, Sutskever & Hinton's CNN won ImageNet by a massive margin using GPUs and ReLU activations. This moment launched the modern deep learning era. Everything since traces back here.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-year">2017</div>
+      <div class="tl-title">Transformers ("Attention Is All You Need")</div>
+      <div class="tl-desc">Google Brain researchers replaced recurrent networks with the attention mechanism, enabling massively parallel training. Every major AI system today — GPT, Claude, Gemini — uses this architecture.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ CH9: TRANSFORMERS ══════ -->
+<section id="ch9" class="chapter">
+  <div class="ch-tag">Chapter 09 — The Attention Revolution</div>
+  <h2 class="ch-title">Transformers &<br><em>The Attention Mechanism</em></h2>
+  <p class="ch-intro">Before transformers, language models processed words one at a time — slow and bad at long-range context. Attention lets the model look at every word in relation to every other word simultaneously, weighing which relationships matter most for each prediction.</p>
+
+  <div class="three-col">
+    <div class="info-card">
+      <span class="ic-icon">👀</span>
+      <div class="ic-label">Self-Attention</div>
+      <div class="ic-title">Each Word Attends to All Others</div>
+      <p class="ic-text">For each word, the model computes "how much should I attend to every other word?" — producing an attention score. This is how "bank" resolves its meaning from context: "river bank" vs "central bank."</p>
+    </div>
+    <div class="info-card">
+      <span class="ic-icon">🔗</span>
+      <div class="ic-label">Multi-Head Attention</div>
+      <div class="ic-title">8–96 Parallel Attention Heads</div>
+      <p class="ic-text">Rather than one attention pattern, transformers compute many in parallel (GPT-4 likely uses ~96 heads). Different heads learn different relationship types: syntax, coreference, semantic similarity.</p>
+    </div>
+    <div class="info-card">
+      <span class="ic-icon">📍</span>
+      <div class="ic-label">Positional Encoding</div>
+      <div class="ic-title">Word Order Matters</div>
+      <p class="ic-text">Since attention doesn't inherently know word order, transformers add positional encodings — sinusoidal patterns that tell the model where each token sits in the sequence. "Dog bites man" vs "Man bites dog."</p>
+    </div>
+  </div>
+
+  <!-- INTERACTIVE: Attention heatmap -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+      <div class="t-title">lab_09.sh — Attention Heatmap Visualizer</div>
+    </div>
+    <div class="terminal-body">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td);letter-spacing:0.1em;margin-bottom:16px;">$ CLICK A WORD TO SEE WHICH OTHERS IT MOST STRONGLY "ATTENDS TO"</p>
+      <div class="attn-words-row" id="attn-words"></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--td);letter-spacing:0.1em;margin-bottom:12px;" id="attn-explain">Select a word above to see its attention pattern</div>
+      <div class="attn-matrix">
+        <div class="attn-col-labels" id="attn-col-labels"></div>
+        <div id="attn-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <span class="acc-title-text">▸ What is a "token" exactly?</span>
+        <span class="acc-arrow">▾</span>
+      </div>
+      <div class="acc-body">
+        <div class="acc-inner">
+          <p>Tokens are the basic units transformers operate on. A token is roughly 3–4 characters of text on average — so "tokenization" is not simply splitting by spaces. The word "unbelievable" might be split into ["un", "believ", "able"]. Numbers, punctuation, and code have their own tokenization patterns.</p>
+          <p>Why not just use characters? Characters are too granular (sequences get very long). Why not words? Vocabulary would be enormous (hundreds of thousands of words), and rare words would never appear in training. Tokens (using algorithms like BPE — Byte Pair Encoding) balance vocabulary size against sequence length.</p>
+          <p>GPT-4 has a context window of ~128,000 tokens — roughly 96,000 words or about 320 pages of text. Claude's context window is even larger at 200,000 tokens.</p>
+        </div>
+      </div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-header" onclick="toggleAcc(this)">
+        <span class="acc-title-text">▸ What are parameters? (And why does size matter?)</span>
+        <span class="acc-arrow">▾</span>
+      </div>
+      <div class="acc-body">
+        <div class="acc-inner">
+          <p>Parameters are the learnable numbers — the weights — in a neural network. A 7-billion-parameter model has 7 billion floating-point numbers that were tuned during training. These weights collectively encode the model's "knowledge" — patterns extracted from training data.</p>
+          <p>Scale matters because larger models discover more subtle patterns. GPT-2 (2019): 1.5B params, impressive for its time. GPT-3 (2020): 175B params, suddenly showed few-shot learning. GPT-4 (2023): estimated 1.7 trillion params, multimodal, doctoral-level reasoning. The field discovered empirical "scaling laws" — as you increase parameters, data, and compute in the right ratios, capabilities reliably improve.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════ CH10: LLMs ══════ -->
+<section id="ch10" class="chapter">
+  <div class="ch-tag">Chapter 10 — The Modern Era</div>
+  <h2 class="ch-title">LLMs in Action:<br><em>Temperature, Tokens & Generation</em></h2>
+  <p class="ch-intro">LLMs generate text one token at a time. At each step, the model produces a probability distribution over the entire vocabulary — then samples from it. The "temperature" parameter controls randomness: low temperature = conservative, high = creative/unpredictable.</p>
+
+  <!-- INTERACTIVE: Token generator with temperature -->
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="t-dot r"></div><div class="t-dot y"></div><div class="t-dot g"></div>
+      <div class="t-title">lab_10.sh — Token Generation Simulator</div>
+    </div>
+    <div class="terminal-body">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--td);letter-spacing:0.1em;margin-bottom:16px;">$ ADJUST TEMPERATURE · CLICK GENERATE TO ADD TOKENS ONE BY ONE</p>
+
+      <div class="temp-control">
+        <span class="temp-label">Temperature</span>
+        <input type="range" id="temp-slider" min="0" max="200" value="70" oninput="updateTemp()">
+        <span class="temp-val" id="temp-val">0.7</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--td);" id="temp-desc">Balanced</span>
+      </div>
+
+      <div class="token-prompt" id="token-output">
+        The large language model processes each<span class="token-cursor"></span>
+      </div>
+
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--td);letter-spacing:0.1em;margin-bottom:8px;">NEXT TOKEN PROBABILITIES (TOP 5)</div>
+      <div class="token-probs" id="token-probs"></div>
+
+      <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+        <button class="btn-solid" onclick="generateToken()">▶ Generate Token</button>
+        <button class="btn" onclick="autoGenerate()" id="auto-btn">Auto Generate</button>
+        <button class="btn" onclick="resetTokenGen()">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="info-card">
+      <span class="ic-icon">📊</span>
+      <div class="ic-label">Pre-Training</div>
+      <div class="ic-title">Next-Token Prediction</div>
+      <p class="ic-text">The base model trains on internet-scale text, learning to predict the next token. This alone produces a model that can write, reason, and code — though it might also reproduce harmful or unhelpful content verbatim.</p>
+    </div>
+    <div class="info-card">
+      <span class="ic-icon">👥</span>
+      <div class="ic-label">Fine-Tuning (RLHF)</div>
+      <div class="ic-title">Human Preference Learning</div>
+      <p class="ic-text">Human raters compare model outputs and indicate which is better. A "reward model" learns to predict human preferences. The LLM is then trained via reinforcement learning to maximize this reward — making it helpful, harmless, and honest.</p>
+    </div>
+    <div class="info-card">
+      <span class="ic-icon">🛡️</span>
+      <div class="ic-label">Constitutional AI</div>
+      <div class="ic-title">Principle-Based Alignment</div>
+      <p class="ic-text">Anthropic's approach for Claude: the model is given a set of principles and trained to critique its own outputs against them. This allows self-supervised alignment improvement without requiring human ratings for every output.</p>
+    </div>
+  </div>
+
+  <div class="quiz-box">
+    <div class="quiz-title">⬡ Final Check</div>
+    <div class="quiz-q">Why does high "temperature" in an LLM make outputs more creative but less reliable?</div>
+    <div class="quiz-options">
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><span class="quiz-opt-key">A</span> High temperature makes the model run faster, skipping checks</div>
+      <div class="quiz-opt" onclick="answer(this,'correct')"><span class="quiz-opt-key">B</span> It flattens the probability distribution, making lower-probability (surprising) tokens more likely to be selected</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><span class="quiz-opt-key">C</span> Temperature refers to the physical heat of the GPU hardware</div>
+      <div class="quiz-opt" onclick="answer(this,'wrong')"><span class="quiz-opt-key">D</span> Higher temperature means more training data was used</div>
+    </div>
+    <div class="quiz-feedback" id="qf10"></div>
+  </div>
+</section>
+
+<!-- ══════ FINALE: FULL STACK ══════ -->
+<section id="finale">
+  <div style="text-align:center;margin-bottom:60px;">
+    <div class="ch-tag" style="justify-content:center;">The Complete Picture</div>
+    <h2 class="ch-title" style="font-size:clamp(36px,5vw,64px);">Every Layer Built<br><em>on the Layer Before</em></h2>
+    <p style="color:var(--tm);font-style:italic;max-width:520px;margin:0 auto;font-size:16px;">Nothing appeared magically. Civilization slowly built layers of abstraction — each generation hiding complexity behind simple interfaces, then building something new on top.</p>
+  </div>
+
+  <div class="stack-final" id="stackFinal">
+    <div class="sf-layer"><div class="sf-num">01</div><div class="sf-bar"><div class="sf-name">Tally Marks & Counting Systems</div><div class="sf-year">~30,000 BCE</div></div></div>
+    <div class="sf-layer"><div class="sf-num"></div><div class="sf-connector"><div class="sf-line"></div></div></div>
+    <div class="sf-layer"><div class="sf-num">02</div><div class="sf-bar"><div class="sf-name">Place-Value Numerals & Zero</div><div class="sf-year">~200 BCE</div></div></div>
+    <div class="sf-layer"><div class="sf-num"></div><div class="sf-connector"><div class="sf-line"></div></div></div>
+    <div class="sf-layer"><div class="sf-num">03</div><div class="sf-bar"><div class="sf-name">Boolean Algebra & Binary Logic</div><div class="sf-year">1847</div></div></div>
+    <div class="sf-layer"><div class="sf-num"></div><div class="sf-connector"><div class="sf-line"></div></div></div>
+    <div class="sf-layer"><div class="sf-num">04</div><div class="sf-bar"><div class="sf-name">Turing Machines (Theory of Computation)</div><div class="sf-year">1936</div></div></div>
+    <div class="sf-layer"><div class="sf-num"></div><div class="sf-connector"><div class="sf-line"></div></div></div>
+    <div class="sf-layer"><div class="sf-num">05</div><div class="sf-bar"><div class="sf-name">Transistors & Semiconductor Chips</div><div class="sf-year">1947–60s</div></div></div>
+    <div class="sf-layer"><div class="sf-num"></div><div class="sf-connector"><div class="sf-line"></div></div></div>
+    <div class="sf-layer"><div class="sf-num">06</div><div class="sf-bar"><div class="sf-name">Operating Systems & Personal Computers</div><div class="sf-year">1960s–80s</div></div></div>
+    <div class="sf-layer"><div class="sf-num"></div><div class="sf-connector"><div class="sf-line"></div></div></div>
+    <div class="sf-layer"><div class="sf-num">07</div><div class="sf-bar"><div class="sf-name">Internet & TCP/IP Protocols</div><div class="sf-year">1969–1991</div></div></div>
+    <div class="sf-layer"><div class="sf-num"></div><div class="sf-connector"><div class="sf-line"></div></div></div>
+    <div class="sf-layer"><div class="sf-num">08</div><div class="sf-bar"><div class="sf-name">World Wide Web, HTML/CSS/JavaScript</div><div class="sf-year">1991–2000s</div></div></div>
+    <div class="sf-layer"><div class="sf-num"></div><div class="sf-connector"><div class="sf-line"></div></div></div>
+    <div class="sf-layer"><div class="sf-num">09</div><div class="sf-bar"><div class="sf-name">Machine Learning & Neural Networks</div><div class="sf-year">2012</div></div></div>
+    <div class="sf-layer"><div class="sf-num"></div><div class="sf-connector"><div class="sf-line"></div></div></div>
+    <div class="sf-layer"><div class="sf-num">10</div><div class="sf-bar"><div class="sf-name">Transformer Architecture</div><div class="sf-year">2017</div></div></div>
+    <div class="sf-layer"><div class="sf-num"></div><div class="sf-connector"><div class="sf-line"></div></div></div>
+    <div class="sf-layer"><div class="sf-num">11</div><div class="sf-bar"><div class="sf-name">Large Language Models — AI That Talks Back</div><div class="sf-year">2022–Now</div></div></div>
+  </div>
+
+  <div class="guide-end">
+    <h2 class="end-title">Both <em>Magnificent</em><br>and Slightly Alarming</h2>
+    <p class="end-text">Abstractions became so powerful that the machines now help us build new abstractions. We are the first species to create tools that help us create better tools.</p>
+    <div class="end-mono">The story is still being written. — Claude Sonnet, 2026</div>
+  </div>
+</section>
+
+</div><!-- /main -->
+
+<script>
+// ══════════════════════════════════════════════
+// UTILITIES
+// ══════════════════════════════════════════════
+
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+}
+
+// Progress bar + sidebar active state
+window.addEventListener('scroll',()=>{
+  const doc = document.documentElement;
+  const pct = (doc.scrollTop/(doc.scrollHeight-doc.clientHeight))*100;
+  document.getElementById('progress-bar').style.width = pct+'%';
+
+  const sections = document.querySelectorAll('section[id]');
+  const navItems = document.querySelectorAll('.nav-item');
+  let current = '';
+  sections.forEach(s=>{
+    if(s.getBoundingClientRect().top < window.innerHeight*0.4) current = s.id;
+  });
+  navItems.forEach(item=>{
+    item.classList.remove('active');
+    if(item.getAttribute('href')==='#'+current) item.classList.add('active');
+  });
+
+  // Scroll-triggered animations
+  document.querySelectorAll('.tl-item,.sf-layer').forEach(el=>{
+    if(el.getBoundingClientRect().top < window.innerHeight*0.88) el.classList.add('visible');
+  });
+});
+
+// ══════════════════════════════════════════════
+// CH1: BASE CONVERTER
+// ══════════════════════════════════════════════
+document.getElementById('base-input').addEventListener('input',function(){
+  const n = Math.min(65535,Math.max(0,parseInt(this.value)||0));
+  document.getElementById('b10').textContent = n;
+  document.getElementById('b2').textContent = n.toString(2).padStart(Math.max(8,n.toString(2).length),'0');
+  document.getElementById('b8').textContent = n.toString(8);
+  document.getElementById('b16').textContent = n.toString(16).toUpperCase();
+  document.getElementById('bbits').textContent = n===0?1:Math.floor(Math.log2(n))+1;
+  try{document.getElementById('bascii').textContent = n>0&&n<128?String.fromCharCode(n)+'  ('+asciiName(n)+')':n<=255?'0x'+n.toString(16).toUpperCase()+' (extended)':'—';}catch(e){}
+});
+
+function asciiName(c){
+  const m={0:'NUL',7:'BEL',8:'BS',9:'TAB',10:'LF',13:'CR',27:'ESC',32:'Space'};
+  return m[c]||(c>=32&&c<127?'printable':'ctrl');
+}
+
+// ══════════════════════════════════════════════
+// CH2: BIT SWITCHES
+// ══════════════════════════════════════════════
+const bits = new Array(8).fill(0);
+function buildSwitches(){
+  const c = document.getElementById('bit-switches');
+  c.innerHTML='';
+  for(let i=7;i>=0;i--){
+    const wrap = document.createElement('div');
+    wrap.className='bit-switch';
+    const btn = document.createElement('div');
+    btn.className='bit-btn'+(bits[i]?' on':'');
+    btn.innerHTML=`<span class="bit-val">${bits[i]}</span><span class="bit-pow">2<sup>${i}</sup>=${Math.pow(2,i)}</span>`;
+    btn.onclick=()=>{bits[i]=bits[i]?0:1;buildSwitches();updateBitResult();};
+    const pos = document.createElement('div');
+    pos.className='bit-pos';pos.textContent='Bit '+i;
+    wrap.appendChild(btn);wrap.appendChild(pos);
+    c.appendChild(wrap);
+  }
+}
+
+function updateBitResult(){
+  const val = bits.reduce((a,b,i)=>a+b*Math.pow(2,i),0);
+  document.getElementById('bit-decimal').textContent=val;
+  const h='0x'+val.toString(16).toUpperCase().padStart(2,'0');
+  const ch=val>=32&&val<127?'Char: '+String.fromCharCode(val):val===0?'Char: NUL':'Char: (non-printable)';
+  document.getElementById('bit-hex').textContent=`Hex: ${h} · Binary: ${bits.slice().reverse().join('')} · ${ch}`;
+}
+
+function setBits(n){
+  for(let i=0;i<8;i++) bits[i]=(n>>i)&1;
+  buildSwitches();updateBitResult();
+}
+
+buildSwitches();updateBitResult();
+
+// ASCII visualizer
+function renderASCII(){
+  const txt=document.getElementById('ascii-input').value;
+  const out=document.getElementById('ascii-output');
+  out.innerHTML='';
+  for(const ch of txt.slice(0,12)){
+    const code=ch.charCodeAt(0);
+    const d=document.createElement('div');
+    d.className='ascii-char-block';
+    d.innerHTML=`<span class="acb-char">${ch==' '?'␣':ch}</span><span class="acb-dec">${code}</span><span class="acb-bin">${code.toString(2).padStart(8,'0')}</span>`;
+    out.appendChild(d);
+  }
+}
+document.getElementById('ascii-input').addEventListener('input',renderASCII);
+renderASCII();
+
+// RGB Mixer
+function updateRGB(){
+  const r=+document.getElementById('rs').value;
+  const g=+document.getElementById('gs').value;
+  const b=+document.getElementById('bs').value;
+  document.getElementById('rv').textContent=r;
+  document.getElementById('gv').textContent=g;
+  document.getElementById('bv').textContent=b;
+  const hex='#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0').toUpperCase()).join('');
+  document.getElementById('color-preview').style.background=`rgb(${r},${g},${b})`;
+  document.getElementById('color-hex').textContent=hex;
+  document.getElementById('color-binary').innerHTML=
+    `R: ${r.toString(2).padStart(8,'0')} · G: ${g.toString(2).padStart(8,'0')} · B: ${b.toString(2).padStart(8,'0')}<br>Total: 24 bits per pixel · Hex: ${hex}`;
+}
+updateRGB();
+
+// ══════════════════════════════════════════════
+// CH3: LOGIC GATES
+// ══════════════════════════════════════════════
+let gateType='AND',gA=0,gB=0;
+
+const gateInfo={
+  AND:{op:'A · B',desc:'AND: Output is 1 only when BOTH inputs are 1. Used in: address decoding, masking operations.'},
+  OR:{op:'A + B',desc:'OR: Output is 1 when AT LEAST ONE input is 1. Used in: combining conditions, interrupt handling.'},
+  NOT:{op:'¬A',desc:'NOT: Output is the INVERSE of input A (single input). Used in: inverting signals, creating NAND/NOR.'},
+  NAND:{op:'¬(A·B)',desc:'NAND: NOT-AND — inverse of AND. Functionally complete: all other gates can be built from NAND alone.'},
+  NOR:{op:'¬(A+B)',desc:'NOR: NOT-OR — inverse of OR. Also functionally complete. Used in: static RAM cells, flip-flops.'},
+  XOR:{op:'A ⊕ B',desc:'XOR (Exclusive OR): Output is 1 when inputs DIFFER. Key component of: half adders, checksums, encryption.'},
+};
+
+function calcGate(){
+  switch(gateType){
+    case 'AND': return gA&gB;
+    case 'OR':  return gA|gB;
+    case 'NOT': return gA?0:1;
+    case 'NAND':return (gA&gB)?0:1;
+    case 'NOR': return (gA|gB)?0:1;
+    case 'XOR': return gA^gB;
+  }
+}
+
+function updateGate(){
+  const out=calcGate();
+  const dA=document.getElementById('gA');
+  const dB=document.getElementById('gB');
+  dA.textContent=gA;dA.className='gate-toggle'+(gA?' on':'');
+  dB.textContent=gB;dB.className='gate-toggle'+(gB?' on':'');
+  document.getElementById('gate-out').textContent=out;
+  const ob=document.getElementById('gate-out-box');
+  ob.className='gate-output-box'+(out?' on':'');
+  document.getElementById('gate-out-state').textContent='Output · '+(out?'TRUE':'FALSE');
+  document.getElementById('gate-name').textContent=gateType;
+  document.getElementById('gate-op').textContent=gateInfo[gateType].op;
+  document.getElementById('gate-desc').textContent=gateInfo[gateType].desc;
+
+  // Show/hide B for NOT
+  document.getElementById('gate-b-row').style.display=gateType==='NOT'?'none':'flex';
+
+  // Build truth table
+  const tbl=document.getElementById('truth-table');
+  const isNot=gateType==='NOT';
+  const headers=isNot?['Input A','Output']:['Input A','Input B','Output'];
+  const rows=isNot?[[0],[1]]:[[0,0],[0,1],[1,0],[1,1]];
+  let html=`<tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr>`;
+  rows.forEach(r=>{
+    let result;
+    const a=r[0],b=r[1]||0;
+    switch(gateType){
+      case 'AND':result=a&b;break;case 'OR':result=a|b;break;case 'NOT':result=a?0:1;break;
+      case 'NAND':result=(a&b)?0:1;break;case 'NOR':result=(a|b)?0:1;break;case 'XOR':result=a^b;break;
+    }
+    const isCurrentRow=isNot?(a===gA):(a===gA&&b===gB);
+    html+=`<tr class="${isCurrentRow?'highlight':''}">${r.map(v=>`<td>${v}</td>`).join('')}<td><strong>${result}</strong></td></tr>`;
+  });
+  tbl.innerHTML=html;
+}
+
+function setGate(type,btn){
+  gateType=type;
+  document.querySelectorAll('.gate-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  updateGate();
+}
+
+function toggleGateInput(which){
+  if(which==='A')gA=gA?0:1;else gB=gB?0:1;
+  updateGate();
+}
+
+updateGate();
+
+// ══════════════════════════════════════════════
+// CH5: CPU CYCLE
+// ══════════════════════════════════════════════
+let cpuCurrent=0;
+const cpuMessages=[
+  '► Program Counter (PC) = 0x0042. Memory address fetched → instruction register loaded: 0x0802 (ADD R1, R2)',
+  '► Control unit decodes 0x0802: opcode=ADD, source1=register R1 (val: 14), source2=register R2 (val: 27). ALU operation prepared.',
+  '► ALU executes: 14 + 27 = 41. Result held in temporary register. Flags updated: Zero=0, Carry=0, Overflow=0.',
+  '► Result (41) written back to destination register R3. Program Counter advances: PC = 0x0043. Next fetch begins.',
+];
+
+function cpuStep(n){
+  cpuCurrent=n;
+  for(let i=0;i<4;i++){
+    const el=document.getElementById('cs'+i);
+    if(el)el.className='cpu-step'+(i===n?' active':'');
+  }
+  document.getElementById('cpu-anim').textContent=cpuMessages[n];
+}
+
+// ══════════════════════════════════════════════
+// CH6: PACKET ROUTING
+// ══════════════════════════════════════════════
+const PKT = {
+  canvas:null,ctx:null,
+  nodes:[],edges:[],packets:[],failed:new Set(),
+  init(){
+    this.canvas=document.getElementById('pkt-canvas');
+    if(!this.canvas)return;
+    this.canvas.width=this.canvas.offsetWidth;
+    this.canvas.height=this.canvas.offsetHeight;
+    this.ctx=this.canvas.getContext('2d');
+    const W=this.canvas.width,H=this.canvas.height;
+    this.nodes=[
+      {id:0,x:W*0.08,y:H*0.5,label:'SRC',special:'src'},
+      {id:1,x:W*0.25,y:H*0.2,label:'R1'},
+      {id:2,x:W*0.25,y:H*0.75,label:'R2'},
+      {id:3,x:W*0.5,y:H*0.15,label:'R3'},
+      {id:4,x:W*0.5,y:H*0.5,label:'R4'},
+      {id:5,x:W*0.5,y:H*0.82,label:'R5'},
+      {id:6,x:W*0.72,y:H*0.3,label:'R6'},
+      {id:7,x:W*0.72,y:H*0.7,label:'R7'},
+      {id:8,x:W*0.92,y:H*0.5,label:'DST',special:'dst'},
+    ];
+    this.edges=[[0,1],[0,2],[1,3],[1,4],[2,4],[2,5],[3,6],[4,6],[4,7],[5,7],[6,8],[7,8]];
+    this.canvas.onclick=(e)=>{
+      const r=this.canvas.getBoundingClientRect();
+      const mx=e.clientX-r.left,my=e.clientY-r.top;
+      this.nodes.forEach(n=>{
+        if(Math.hypot(n.x-mx,n.y-my)<18&&n.id!==0&&n.id!==8){
+          if(this.failed.has(n.id))this.failed.delete(n.id);
+          else this.failed.add(n.id);
+        }
+      });
+    };
+    this.draw();
+    setInterval(()=>this.tick(),16);
+  },
+  draw(){
+    if(!this.ctx)return;
+    const {ctx,canvas,nodes,edges,packets,failed}=this;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // Edges
+    edges.forEach(([a,b])=>{
+      const na=nodes[a],nb=nodes[b];
+      const faded=failed.has(a)||failed.has(b);
+      ctx.beginPath();ctx.moveTo(na.x,na.y);ctx.lineTo(nb.x,nb.y);
+      ctx.strokeStyle=faded?'rgba(248,113,113,0.2)':'rgba(52,211,153,0.15)';
+      ctx.lineWidth=1.5;ctx.stroke();
+    });
+    // Nodes
+    nodes.forEach(n=>{
+      const isFailed=failed.has(n.id);
+      const color=n.special==='src'?'#60a5fa':n.special==='dst'?'#fbbf24':isFailed?'#f87171':'#34d399';
+      ctx.beginPath();ctx.arc(n.x,n.y,16,0,Math.PI*2);
+      ctx.fillStyle=isFailed?'rgba(248,113,113,0.15)':'rgba(52,211,153,0.08)';
+      ctx.fill();
+      ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
+      ctx.fillStyle=color;ctx.font='bold 9px JetBrains Mono';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(isFailed?'✕':n.label,n.x,n.y);
+    });
+    // Packets
+    packets.forEach(p=>{
+      ctx.beginPath();ctx.arc(p.x,p.y,6,0,Math.PI*2);
+      ctx.fillStyle='#34d399';ctx.fill();
+      ctx.strokeStyle='rgba(52,211,153,0.4)';ctx.lineWidth=8;
+      ctx.beginPath();ctx.arc(p.x,p.y,10,0,Math.PI*2);ctx.stroke();
+    });
+  },
+  tick(){
+    this.packets=this.packets.filter(p=>{
+      if(p.pathIdx>=p.path.length-1){
+        document.getElementById('pkt-log').textContent=`✓ Packet delivered to DST via: ${p.path.map(i=>this.nodes[i].label).join(' → ')}`;
+        return false;
+      }
+      const from=this.nodes[p.path[p.pathIdx]];
+      const to=this.nodes[p.path[p.pathIdx+1]];
+      const dx=to.x-from.x,dy=to.y-from.y,dist=Math.hypot(dx,dy);
+      p.progress+=3/dist;
+      if(p.progress>=1){p.progress=0;p.pathIdx++;}
+      p.x=from.x+dx*p.progress;p.y=from.y+dy*p.progress;
+      return true;
+    });
+    this.draw();
+  },
+  findPath(from,to){
+    const adj={};this.edges.forEach(([a,b])=>{
+      if(!adj[a])adj[a]=[];if(!adj[b])adj[b]=[];
+      if(!this.failed.has(a)&&!this.failed.has(b)){adj[a].push(b);adj[b].push(a);}
+    });
+    const queue=[[from]],visited=new Set([from]);
+    while(queue.length){
+      const path=queue.shift();const node=path[path.length-1];
+      if(node===to)return path;
+      (adj[node]||[]).forEach(n=>{if(!visited.has(n)){visited.add(n);queue.push([...path,n]);}});
+    }
+    return null;
+  }
+};
+
+function sendPacket(){
+  const path=PKT.findPath(0,8);
+  if(!path){
+    document.getElementById('pkt-log').textContent='✗ No route to destination — too many failed nodes!';
+    return;
+  }
+  document.getElementById('pkt-log').textContent=`⟶ Routing: ${path.map(i=>PKT.nodes[i].label).join(' → ')}`;
+  const from=PKT.nodes[path[0]];
+  PKT.packets.push({x:from.x,y:from.y,path,pathIdx:0,progress:0});
+}
+
+function resetPacketNet(){
+  PKT.failed.clear();PKT.packets=[];
+  document.getElementById('pkt-log').textContent='Network reset. All nodes online.';
+}
+
+// ══════════════════════════════════════════════
+// CH7: LIVE CODE EDITOR
+// ══════════════════════════════════════════════
+function updatePreview(){
+  const code=document.getElementById('live-code').value;
+  const iframe=document.getElementById('live-preview');
+  const doc=iframe.contentDocument||iframe.contentWindow.document;
+  doc.open();doc.write(code);doc.close();
+}
+setTimeout(updatePreview,100);
+
+// ══════════════════════════════════════════════
+// CH8: NEURAL NETWORK CANVAS
+// ══════════════════════════════════════════════
+const NN={
+  canvas:null,ctx:null,
+  layers:[3,5,5,3],
+  weights:[],activations:[],
+  animFrame:null,
+  init(){
+    this.canvas=document.getElementById('nn-canvas');
+    if(!this.canvas)return;
+    this.canvas.width=this.canvas.offsetWidth;
+    this.canvas.height=260;
+    this.ctx=this.canvas.getContext('2d');
+    this.activations=this.layers.map(n=>new Array(n).fill(0));
+    this.weights=[];
+    for(let l=0;l<this.layers.length-1;l++){
+      const w=[];
+      for(let i=0;i<this.layers[l];i++){
+        w.push(new Array(this.layers[l+1]).fill(0).map(()=>Math.random()*2-1));
+      }
+      this.weights.push(w);
+    }
+    this.draw();
+  },
+  getNodePos(layer,node){
+    const W=this.canvas.width,H=260;
+    const nLayers=this.layers.length;
+    const x=W*0.1+layer*(W*0.8/(nLayers-1));
+    const nNodes=this.layers[layer];
+    const spacing=Math.min(60,(H-60)/nNodes);
+    const totalH=(nNodes-1)*spacing;
+    const y=H/2-totalH/2+node*spacing;
+    return{x,y};
+  },
+  draw(){
+    if(!this.ctx)return;
+    const {ctx,canvas,layers,activations,weights}=this;
+    ctx.clearRect(0,0,canvas.width,260);
+    // Connections
+    for(let l=0;l<layers.length-1;l++){
+      for(let i=0;i<layers[l];i++){
+        for(let j=0;j<layers[l+1];j++){
+          const from=this.getNodePos(l,i);
+          const to=this.getNodePos(l+1,j);
+          const w=weights[l][i][j];
+          const act=activations[l][i];
+          const alpha=0.05+Math.abs(w)*0.15+act*0.2;
+          ctx.beginPath();ctx.moveTo(from.x,from.y);ctx.lineTo(to.x,to.y);
+          ctx.strokeStyle=act>0.5?`rgba(52,211,153,${alpha})`:`rgba(100,120,100,${alpha*0.5})`;
+          ctx.lineWidth=0.8+act*1.5;ctx.stroke();
+        }
+      }
+    }
+    // Nodes
+    for(let l=0;l<layers.length;l++){
+      for(let n=0;n<layers[l];n++){
+        const {x,y}=this.getNodePos(l,n);
+        const act=activations[l][n];
+        ctx.beginPath();ctx.arc(x,y,14,0,Math.PI*2);
+        ctx.fillStyle=`rgba(52,211,153,${0.08+act*0.5})`;ctx.fill();
+        ctx.strokeStyle=act>0.3?`rgba(52,211,153,${0.4+act*0.6})`:'rgba(52,211,153,0.2)';
+        ctx.lineWidth=2;ctx.stroke();
+        if(act>0.1){
+          ctx.fillStyle=`rgba(52,211,153,${act})`;
+          ctx.font='bold 9px JetBrains Mono';
+          ctx.textAlign='center';ctx.textBaseline='middle';
+          ctx.fillText(act.toFixed(1),x,y);
+        }
+      }
+    }
+    // Layer labels
+    const labels=['Input','Hidden 1','Hidden 2','Output'];
+    labels.forEach((lb,l)=>{
+      const {x}=this.getNodePos(l,0);
+      ctx.fillStyle='rgba(52,211,153,0.4)';
+      ctx.font='9px JetBrains Mono';ctx.textAlign='center';
+      ctx.fillText(lb,x,15);
+    });
+  },
+  relu(x){return Math.max(0,x);}
+};
+
+function runForwardPass(){
+  if(!NN.canvas)return;
+  NN.activations[0]=NN.layers[0]===3?[Math.random(),Math.random(),Math.random()]:[];
+  for(let l=0;l<NN.layers.length-1;l++){
+    NN.activations[l+1]=new Array(NN.layers[l+1]).fill(0).map((_,j)=>{
+      const sum=NN.activations[l].reduce((a,act,i)=>a+act*NN.weights[l][i][j],0);
+      return Math.min(1,NN.relu(sum)/2+0.1*Math.random());
+    });
+  }
+  // Animate
+  let step=0;
+  const animate=()=>{
+    const arr=new Array(NN.layers.length).fill(null).map((_,l)=>
+      new Array(NN.layers[l]).fill(0).map((_,n)=>l<=step?NN.activations[l][n]:0)
+    );
+    NN.activations=arr;
+    NN.draw();
+    if(step<NN.layers.length-1){step++;setTimeout(animate,200);}
+    else{
+      NN.activations=NN.layers.map((_,l)=>new Array(_).fill(0).map((_,n)=>NN.activations[l]?NN.activations[l][n]||0:0));
+      document.getElementById('nn-label').textContent=
+        `Forward pass complete. Output: [${NN.activations[NN.layers.length-1].map(v=>v.toFixed(2)).join(', ')}]`;
+    }
+  };
+  NN.activations=NN.layers.map(n=>new Array(n).fill(0));
+  step=0;animate();
+}
+
+function runTrainingStep(){
+  NN.weights=NN.weights.map(layer=>layer.map(row=>row.map(w=>w+(Math.random()*0.2-0.1))));
+  document.getElementById('nn-label').textContent='Weights updated via backpropagation. Loss decreasing...';
+  NN.draw();
+}
+
+function resetNN(){
+  NN.activations=NN.layers.map(n=>new Array(n).fill(0));
+  NN.draw();
+  document.getElementById('nn-label').textContent='Waiting for forward pass...';
+}
+
+// ══════════════════════════════════════════════
+// CH9: ATTENTION HEATMAP
+// ══════════════════════════════════════════════
+const attnSentence=['The','cat','sat','on','the','mat'];
+const attnScores={
+  0:[1.0,0.4,0.1,0.05,0.6,0.3],
+  1:[0.3,1.0,0.7,0.1,0.1,0.5],
+  2:[0.1,0.8,1.0,0.2,0.05,0.6],
+  3:[0.05,0.1,0.4,1.0,0.3,0.2],
+  4:[0.5,0.1,0.05,0.2,1.0,0.7],
+  5:[0.2,0.6,0.7,0.1,0.5,1.0],
+};
+const attnExplains={
+  0:'The → Attends most to "the" (coreference) and "cat" (the noun it determines)',
+  1:'cat → Strongly attends to "sat" (its action) and "mat" (location) — learning the semantic role',
+  2:'sat → Attends to "cat" (who sat) and "mat" (where) — understanding the predicate structure',
+  3:'on → Attends to the verb "sat" and the article "the" — resolving the prepositional phrase',
+  4:'the → Attends to "mat" (the noun it modifies) and "The" (coreference pattern)',
+  5:'mat → Attends to "cat" and "sat" strongly — learning it is the location of the action',
+};
+
+let attnSelected=null;
+
+function buildAttnHeatmap(){
+  const wordsRow=document.getElementById('attn-words');
+  if(!wordsRow)return;
+  wordsRow.innerHTML='';
+  attnSentence.forEach((w,i)=>{
+    const d=document.createElement('div');
+    d.className='attn-word';d.textContent=w;
+    d.onclick=()=>{
+      attnSelected=i;
+      document.querySelectorAll('.attn-word').forEach((el,j)=>{
+        el.className='attn-word'+(j===i?' selected':'');
+      });
+      document.getElementById('attn-explain').textContent=attnExplains[i];
+      renderHeatmap(i);
+    };
+    wordsRow.appendChild(d);
+  });
+
+  // Col labels
+  const colLabels=document.getElementById('attn-col-labels');
+  if(colLabels){
+    colLabels.innerHTML='';
+    attnSentence.forEach(w=>{
+      const d=document.createElement('div');d.className='attn-col-label';d.textContent=w;
+      colLabels.appendChild(d);
+    });
+  }
+  renderHeatmap(null);
+}
+
+function renderHeatmap(selected){
+  const grid=document.getElementById('attn-grid');
+  if(!grid)return;
+  grid.innerHTML='';
+  attnSentence.forEach((word,row)=>{
+    const rowDiv=document.createElement('div');rowDiv.className='attn-row';
+    const label=document.createElement('div');label.className='attn-row-label';label.textContent=word;
+    rowDiv.appendChild(label);
+    const scores=selected!==null?attnScores[selected]:attnScores[row];
+    attnSentence.forEach((_,col)=>{
+      const score=selected!==null?(row===selected?attnScores[selected][col]:0.05):attnScores[row][col];
+      const cell=document.createElement('div');cell.className='attn-cell';
+      const intensity=Math.round(score*255);
+      cell.style.background=`rgba(52,211,153,${score*0.8})`;
+      cell.style.color=score>0.5?'#000':'rgba(52,211,153,0.6)';
+      cell.style.fontSize='10px';
+      cell.textContent=score.toFixed(2);
+      rowDiv.appendChild(cell);
+    });
+    grid.appendChild(rowDiv);
+  });
+}
+
+// ══════════════════════════════════════════════
+// CH10: TOKEN GENERATOR
+// ══════════════════════════════════════════════
+let temperature=0.7;
+let tokenGenerated=[];
+let autoInterval=null;
+
+const tokenSets=[
+  {low:['word','input','token','request'],mid:['word','token','input','concept'],high:['word','idea','query','thought','unit']},
+  {low:['into','to','as','through'],mid:['into','to','as','across'],high:['into','through','across','via','along','past']},
+  {low:['tokens','pieces','units','segments'],mid:['tokens','units','pieces','chunks'],high:['tokens','fragments','pieces','elements','shards']},
+  {low:['using','through','with','via'],mid:['through','using','via','by'],high:['through','via','by','using','within','despite']},
+  {low:['a','the','its','each'],mid:['a','the','its','an'],high:['a','the','an','each','every','some','one']},
+  {low:['statistical','learned','trained','computed'],mid:['statistical','learned','complex','trained'],high:['statistical','emergent','latent','distributed','learned','encoded']},
+  {low:['model','network','system','engine'],mid:['model','network','architecture','system'],high:['model','architecture','substrate','network','engine','space']},
+  {low:['of','in','from','within'],mid:['of','across','within','from'],high:['of','across','spanning','within','throughout']},
+  {low:['word','token','language','text'],mid:['language','word','text','meaning'],high:['language','meaning','representation','context','abstraction']},
+  {low:['patterns','relationships','structures','weights'],mid:['patterns','relationships','structures','representations'],high:['patterns','structures','correlations','manifolds','geometries']},
+];
+
+function getProbs(stepIdx){
+  const set=tokenSets[stepIdx%tokenSets.length];
+  const words=temperature<0.4?set.low:temperature<0.8?set.mid:set.high;
+  let probs=words.map(()=>Math.random());
+  if(temperature<0.3){probs[0]=probs[0]*2+1;}
+  const sum=probs.reduce((a,b)=>a+b);
+  return words.map((w,i)=>({word:w,prob:probs[i]/sum})).sort((a,b)=>b.prob-a.prob).slice(0,5);
+}
+
+function updateTemp(){
+  temperature=document.getElementById('temp-slider').value/100;
+  document.getElementById('temp-val').textContent=temperature.toFixed(2);
+  const desc=temperature<0.3?'Deterministic':temperature<0.6?'Conservative':temperature<0.9?'Balanced':temperature<1.4?'Creative':'Chaotic';
+  document.getElementById('temp-desc').textContent=desc;
+  renderProbs(tokenGenerated.length);
+}
+
+function renderProbs(idx){
+  const probs=getProbs(idx);
+  const container=document.getElementById('token-probs');
+  container.innerHTML='';
+  probs.forEach(({word,prob})=>{
+    const row=document.createElement('div');row.className='token-prob-row';
+    row.innerHTML=`<div class="token-prob-word">"${word}"</div>
+    <div class="token-prob-bar-wrap"><div class="token-prob-bar" style="width:${prob*100}%"></div></div>
+    <div class="token-prob-num">${(prob*100).toFixed(1)}%</div>`;
+    container.appendChild(row);
+  });
+}
+
+function generateToken(){
+  const probs=getProbs(tokenGenerated.length);
+  let chosen;
+  if(temperature<0.3){
+    chosen=probs[0].word;
+  } else {
+    const r=Math.random();let cum=0;
+    for(const p of probs){cum+=p.prob;if(r<cum){chosen=p.word;break;}}
+    if(!chosen)chosen=probs[probs.length-1].word;
+  }
+  tokenGenerated.push(chosen);
+  const out=document.getElementById('token-output');
+  out.innerHTML='The large language model processes each <span class="token-generated">'+tokenGenerated.join(' ')+'</span><span class="token-cursor"></span>';
+  renderProbs(tokenGenerated.length);
+}
+
+function autoGenerate(){
+  if(autoInterval){
+    clearInterval(autoInterval);autoInterval=null;
+    document.getElementById('auto-btn').textContent='Auto Generate';
+  } else {
+    document.getElementById('auto-btn').textContent='⏹ Stop';
+    autoInterval=setInterval(()=>{
+      if(tokenGenerated.length>=20){clearInterval(autoInterval);autoInterval=null;document.getElementById('auto-btn').textContent='Auto Generate';return;}
+      generateToken();
+    },600);
+  }
+}
+
+function resetTokenGen(){
+  tokenGenerated=[];
+  if(autoInterval){clearInterval(autoInterval);autoInterval=null;document.getElementById('auto-btn').textContent='Auto Generate';}
+  document.getElementById('token-output').innerHTML='The large language model processes each<span class="token-cursor"></span>';
+  renderProbs(0);
+}
+
+// ══════════════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════════════
+function answer(el,type){
+  const box=el.closest('.quiz-box');
+  if(box.querySelector('.correct,.wrong'))return;
+  el.classList.add(type);
+  const fb=box.querySelector('.quiz-feedback');
+  fb.classList.add('show',type);
+  fb.textContent=type==='correct'?'✓ Correct! '+getCorrectMsg(box):'✗ Not quite. '+getWrongMsg(box);
+}
+
+function getCorrectMsg(box){
+  const msgs=['Exactly right.','Perfect.','Well reasoned.','That\'s the key insight.'];
+  return msgs[Math.floor(Math.random()*msgs.length)];
+}
+function getWrongMsg(box){
+  const msgs=['Try another option.','Think about the physical constraints.','Consider the underlying mechanism.'];
+  return msgs[Math.floor(Math.random()*msgs.length)];
+}
+
+// ══════════════════════════════════════════════
+// ACCORDION
+// ══════════════════════════════════════════════
+function toggleAcc(header){
+  const item=header.parentElement;
+  const body=item.querySelector('.acc-body');
+  const isOpen=item.classList.contains('open');
+  item.classList.toggle('open');
+  body.style.maxHeight=isOpen?'0':body.scrollHeight+'px';
+}
+
+// ══════════════════════════════════════════════
+// INIT ALL
+// ══════════════════════════════════════════════
+window.addEventListener('load',()=>{
+  PKT.init();
+  NN.init();
+  buildAttnHeatmap();
+  renderProbs(0);
+
+  // Timeline items init
+  document.querySelectorAll('.tl-item').forEach(el=>{
+    if(el.getBoundingClientRect().top<window.innerHeight*0.9)el.classList.add('visible');
+  });
+
+  // Stack finale init
+  document.querySelectorAll('.sf-layer').forEach((el,i)=>{
+    setTimeout(()=>{
+      if(el.getBoundingClientRect().top<window.innerHeight*0.95)el.classList.add('visible');
+    },i*60);
+  });
+});
+
+// Handle resize
+window.addEventListener('resize',()=>{
+  if(PKT.canvas){PKT.canvas.width=PKT.canvas.offsetWidth;PKT.canvas.height=PKT.canvas.offsetHeight;}
+  if(NN.canvas){NN.canvas.width=NN.canvas.offsetWidth;}
+});
+</script>
+</body>
+</html>
