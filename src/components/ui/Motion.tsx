@@ -18,10 +18,10 @@ export function FadeIn({ children, delay = 0, className = "" }: MotionProps) {
 
   return (
     <motion.div
-      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 24 }}
-      whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: 0.8, delay, ease: EASE }}
+      transition={{ duration: shouldReduceMotion ? 0 : 0.8, delay: shouldReduceMotion ? 0 : delay, ease: EASE }}
       className={className}
     >
       {children}
@@ -38,7 +38,7 @@ export function StaggerContainer({ children, className = "", delayChildren = 0.1
       opacity: 1,
       transition: {
         staggerChildren: shouldReduceMotion ? 0 : staggerChildren,
-        delayChildren: delayChildren,
+        delayChildren: shouldReduceMotion ? 0 : delayChildren,
       },
     },
   };
@@ -60,10 +60,8 @@ export function StaggerItem({ children, className = "" }: MotionProps) {
   const shouldReduceMotion = useReducedMotion();
 
   const itemVariants = {
-    hidden: shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 },
-    show: shouldReduceMotion 
-      ? { opacity: 1, transition: { duration: 0.8, ease: EASE } }
-      : { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE } },
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: shouldReduceMotion ? 0 : 0.8, ease: EASE } },
   };
 
   return (
@@ -95,17 +93,13 @@ export function TextReveal({ text, delay = 0, className = "" }: { text: string, 
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: shouldReduceMotion ? 0 : 0.08, delayChildren: delay },
+      transition: { staggerChildren: shouldReduceMotion ? 0 : 0.08, delayChildren: shouldReduceMotion ? 0 : delay },
     },
   };
 
   const wordVariant = {
-    hidden: shouldReduceMotion 
-      ? { opacity: 0 } 
-      : { opacity: 0, y: 10, filter: "blur(4px)" },
-    show: shouldReduceMotion 
-      ? { opacity: 1, transition: { duration: 0.8, ease: EASE } }
-      : { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.8, ease: EASE } },
+    hidden: { opacity: 0, y: 10, filter: "blur(4px)" },
+    show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: shouldReduceMotion ? 0 : 0.8, ease: EASE } },
   };
 
   return (
@@ -130,9 +124,9 @@ export function ParallaxImage({ children, className = "" }: MotionProps) {
 
   return (
     <motion.div
-      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.95 }}
-      animate={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
-      transition={{ duration: 1.2, ease: EASE }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: shouldReduceMotion ? 0 : 1.2, ease: EASE }}
       className={className}
     >
       {/* Subtle continuous float effect */}
