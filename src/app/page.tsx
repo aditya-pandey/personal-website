@@ -109,7 +109,7 @@ export default function Home() {
                 <h3 className="font-serif text-2xl">{currentReading.title}</h3>
                 <p className="font-sans text-sm uppercase tracking-widest text-ink/60">{currentReading.author}</p>
                 <p className="font-sans text-ink/80 mt-2 italic border-l-2 border-accent pl-4">
-                  "{currentReading.note}"
+                  &quot;{currentReading.note}&quot;
                 </p>
               </div>
             </HoverCard>

@@ -35,7 +35,7 @@ export default async function LibraryPost({ params }: { params: Promise<{ slug: 
       <div className="max-w-[65ch] mx-auto">
         {book.metadata.quote && (
           <blockquote className="border-l-2 border-accent pl-6 italic font-serif text-2xl my-12 text-ink-dark/80">
-            "{book.metadata.quote}"
+            &quot;{book.metadata.quote}&quot;
           </blockquote>
         )}
         

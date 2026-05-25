@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FadeIn, TextReveal, ParallaxImage, StaggerContainer, StaggerItem } from "@/components/ui/Motion";
+import { TextReveal, ParallaxImage, StaggerContainer, StaggerItem } from "@/components/ui/Motion";
 
 export const metadata = {
   title: "About | Aditya Pandey",
