@@ -112,7 +112,8 @@ export function TextReveal({ text, delay = 0, className = "" }: { text: string, 
     <motion.div
       variants={container}
       initial="hidden"
-      animate="show" // Animate on mount for hero text
+      whileInView="show"
+      viewport={{ once: true, margin: "-10px" }}
       className={`flex flex-wrap gap-x-[0.25em] ${className}`}
     >
       {words.map((word, i) => (
