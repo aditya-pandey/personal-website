@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Newsreader, Noto_Serif_Devanagari } from "next/font/google";
 import { Navigation } from "@/components/ui/Navigation";
 import { Footer } from "@/components/ui/Footer";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -34,14 +35,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${newsreader.variable} ${notoSerifDevanagari.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-canvas text-ink selection:bg-accent selection:text-white transition-colors duration-300">
-        <Navigation />
-        <main className="flex-grow flex flex-col items-center">
-          {children}
-        </main>
-        <Footer />
+      <body className="min-h-full flex flex-col font-serif bg-canvas text-ink transition-colors duration-500">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Navigation />
+          <main className="flex-grow flex flex-col items-center">
+            {children}
+          </main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

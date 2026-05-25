@@ -2,12 +2,12 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-canvas: #F9F7F2;
-  --color-surface: #F1EEE6;
-  --color-ink: #2D2D2D;
-  --color-ink-dark: #1A1A1A;
-  --color-accent: #C5A059;
-  --color-stone: #E5E2D9;
+  --color-canvas: var(--theme-canvas);
+  --color-surface: var(--theme-surface);
+  --color-ink: var(--theme-ink);
+  --color-ink-dark: var(--theme-ink-dark);
+  --color-accent: var(--theme-accent);
+  --color-stone: var(--theme-stone);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
@@ -22,10 +22,38 @@
   --radius-lg: 0.5rem;
 }
 
+:root {
+  /* LIGHT MODE - Warm Editorial */
+  --theme-canvas: #FAF9F6;
+  --theme-surface: #F3EFEA;
+  --theme-ink: #2C2C2B;
+  --theme-ink-dark: #1A1A1A;
+  --theme-accent: #C5A059;
+  --theme-stone: #E6E2D8;
+  --theme-selection: #EADFB4;
+}
+
+.dark {
+  /* DARK MODE - Warm Charcoal */
+  --theme-canvas: #1E1E1E;
+  --theme-surface: #262626;
+  --theme-ink: #E6E2D8;
+  --theme-ink-dark: #FFFFFF;
+  --theme-accent: #D4B872;
+  --theme-stone: #3A3A3A;
+  --theme-selection: #4A4232;
+}
+
 body {
   background-color: var(--color-canvas);
   color: var(--color-ink);
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
+  line-height: 1.8;
+}
+
+::selection {
+  background-color: var(--theme-selection);
+  color: inherit;
 }
 
 a, button, [role="button"], [tabindex="0"] {
