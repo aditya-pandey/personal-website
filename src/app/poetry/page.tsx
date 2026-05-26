@@ -32,7 +32,7 @@ export default function Poetry() {
             <div className="w-48 md:w-64 flex-shrink-0 shadow-xl overflow-hidden rounded-sm">
               <Image 
                 src="/book_cover.png" 
-                alt="Ek Anjaan Rishta Book Cover"
+                alt="Nirvana se Pehle Book Cover"
                 width={300}
                 height={450}
                 className="w-full h-auto object-cover"
@@ -41,7 +41,7 @@ export default function Poetry() {
             <div>
               <h2 className="font-serif text-3xl md:text-4xl mb-4 text-ink">निर्वाण से पहले</h2>
               <p className="font-sans text-lg text-ink/80 leading-[1.7] mb-8">
-                A collection of Hindi poetry exploring love, loss, and the silent spaces between human connection. Available now in paperback and Kindle editions.
+                A collection of Hindi poetry exploring love, loss, and the silent spaces between human connection. Available now on Amazon and Flipkart.
               </p>
               <div className="flex flex-wrap gap-4">
                 <a href="https://www.amazon.in/dp/9369531718" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-ink text-canvas font-sans text-sm tracking-wide rounded hover:bg-ink/90 transition-colors shadow-sm">
