@@ -3,6 +3,8 @@ import { Geist, Newsreader, Noto_Serif_Devanagari } from "next/font/google";
 import { Navigation } from "@/components/ui/Navigation";
 import { Footer } from "@/components/ui/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { DeepLinkHandler } from "@/components/DeepLinkHandler";
+import { CommandMenu } from "@/components/CommandMenu";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -45,6 +47,8 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <DeepLinkHandler />
+          <CommandMenu />
         </ThemeProvider>
       </body>
     </html>

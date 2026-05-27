@@ -59,3 +59,84 @@ body {
 a, button, [role="button"], [tabindex="0"] {
   cursor: pointer;
 }
+
+/* Atmospheric styles for poetry reading experience */
+.poetry-reading-bg {
+  background: radial-gradient(
+    circle at 50% 30%,
+    var(--theme-canvas) 0%,
+    var(--theme-canvas) 50%,
+    var(--theme-surface) 100%
+  );
+  position: relative;
+}
+
+.poetry-reading-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.02;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.dark .poetry-reading-bg::before {
+  opacity: 0.012;
+}
+
+/* Animations for premium literary share experience */
+@keyframes fragment-pulse {
+  0% {
+    background-color: var(--theme-selection);
+    border-left-color: var(--theme-accent);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.highlighted-fragment {
+  animation: fragment-pulse 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  padding-left: 0.5rem;
+  margin-left: -0.5rem;
+  border-radius: 4px;
+  border-left: 2px solid transparent;
+}
+
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) translateX(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+}
+
+.animate-float-up {
+  animation: float-up 0.25s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+/* Hide scrollbar for horizontal shelf scrolling */
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* 3D perspective container for artifact cards */
+.artifact-perspective {
+  perspective: 800px;
+}
+
+/* Shelf scroll snap */
+.shelf-scroll {
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+.shelf-scroll > * {
+  scroll-snap-align: start;
+}

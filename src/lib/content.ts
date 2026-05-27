@@ -100,5 +100,6 @@ export function getCurrentReading(): CurrentReading | null {
   const filePath = path.join(contentDirectory, "library", "current-reading.json");
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, "utf-8");
-  return JSON.parse(raw) as CurrentReading;
+  const data = JSON.parse(raw);
+  return (data.reading || data) as CurrentReading;
 }

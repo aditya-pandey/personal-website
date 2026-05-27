@@ -1,5 +1,13 @@
 {
-  "title": "The Hungry Tide",
-  "author": "Amitav Ghosh",
-  "note": "Exploring the beautiful, precarious tides of the Sundarbans and the delicate balance between humanity and nature."
+  "reading": {
+    "title": "The Hungry Tide",
+    "author": "Amitav Ghosh",
+    "note": "Exploring the beautiful, precarious tides of the Sundarbans and the delicate balance between humanity and nature."
+  },
+  "watched": {
+    "title": "Perfect Days",
+    "director": "Wim Wenders",
+    "year": "2023",
+    "note": "A quiet contemplation of routine, cassette tapes, and looking at shadow patterns in trees."
+  }
 }

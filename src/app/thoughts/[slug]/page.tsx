@@ -2,6 +2,8 @@ import { getThoughts, getThoughtBySlug } from "@/lib/content";
 import { MDXRenderer } from "@/components/ui/MDXRenderer";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { ShareButton } from "@/components/ShareButton";
+import { WriteBack } from "@/components/WriteBack";
 
 export async function generateStaticParams() {
   const thoughts = getThoughts();
@@ -27,7 +29,7 @@ export default async function ThoughtPost({ params }: { params: Promise<{ slug: 
         <h1 className="font-serif text-4xl md:text-5xl lg:text-[48px] tracking-tight leading-[1.1] mb-6">
           {thought.metadata.title}
         </h1>
-        <div className="flex items-center gap-4 font-sans text-sm text-ink/60 uppercase tracking-widest border-t border-stone/50 pt-6 mt-12">
+        <div className="flex items-center flex-wrap gap-x-4 gap-y-2 font-sans text-sm text-ink/60 uppercase tracking-widest border-t border-stone/50 pt-6 mt-12">
           <time>{new Date(thought.metadata.date).toLocaleDateString("en-US", { month: "long", year: "numeric", day: "numeric" })}</time>
           {thought.metadata.tags && thought.metadata.tags.length > 0 && (
             <>
@@ -35,10 +37,16 @@ export default async function ThoughtPost({ params }: { params: Promise<{ slug: 
               <span>{thought.metadata.tags.join(", ")}</span>
             </>
           )}
+          <span>&middot;</span>
+          <ShareButton title={thought.metadata.title} label="Share" className="text-sm font-sans uppercase tracking-widest text-ink/60 font-normal hover:text-accent" />
         </div>
       </header>
 
       <MDXRenderer source={thought.content} />
+      
+      <div className="max-w-[65ch] mx-auto mt-16 md:mt-24">
+        <WriteBack title={thought.metadata.title} />
+      </div>
       
     </div>
   );

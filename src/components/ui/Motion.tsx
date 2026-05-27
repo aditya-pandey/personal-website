@@ -18,10 +18,15 @@ export function FadeIn({ children, delay = 0, className = "" }: MotionProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
-      transition={{ duration: shouldReduceMotion ? 0 : 0.8, delay: shouldReduceMotion ? 0 : delay, ease: EASE }}
+      transition={{ 
+        type: "spring", 
+        stiffness: 90, 
+        damping: 16, 
+        delay: shouldReduceMotion ? 0 : delay 
+      }}
       className={className}
     >
       {children}
@@ -29,7 +34,7 @@ export function FadeIn({ children, delay = 0, className = "" }: MotionProps) {
   );
 }
 
-export function StaggerContainer({ children, className = "", delayChildren = 0.1, staggerChildren = 0.1 }: MotionProps & { delayChildren?: number, staggerChildren?: number }) {
+export function StaggerContainer({ children, className = "", delayChildren = 0.1, staggerChildren = 0.08 }: MotionProps & { delayChildren?: number, staggerChildren?: number }) {
   const shouldReduceMotion = useReducedMotion();
 
   const containerVariants = {
@@ -60,8 +65,16 @@ export function StaggerItem({ children, className = "" }: MotionProps) {
   const shouldReduceMotion = useReducedMotion();
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: shouldReduceMotion ? 0 : 0.8, ease: EASE } },
+    hidden: { opacity: 0, y: 10 },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        type: "spring" as const, 
+        stiffness: 100, 
+        damping: 18 
+      } 
+    },
   };
 
   return (
@@ -76,8 +89,8 @@ export function HoverCard({ children, className = "" }: MotionProps) {
 
   return (
     <motion.div
-      whileHover={shouldReduceMotion ? {} : { y: -4, scale: 1.01 }}
-      transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+      whileHover={shouldReduceMotion ? {} : { y: -2, scale: 1.005 }}
+      transition={{ type: "spring", stiffness: 150, damping: 20 }}
       className={className}
     >
       {children}
