@@ -21,12 +21,9 @@ export function ShareButton({
   align = "bottom",
 }: ShareButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [resolvedUrl, setResolvedUrl] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    setResolvedUrl(url || window.location.href);
-  }, [url]);
+  const currentUrl = url || (typeof window !== "undefined" ? window.location.href : "");
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -44,7 +41,7 @@ export function ShareButton({
 
   const handleCopyLink = async () => {
     try {
-      await navigator.clipboard.writeText(resolvedUrl);
+      await navigator.clipboard.writeText(currentUrl);
       window.dispatchEvent(
         new CustomEvent("literary-toast", {
           detail: { message: "Link copied quietly." },
@@ -62,7 +59,7 @@ export function ShareButton({
         await navigator.share({
           title,
           text: text || `Read this: ${title}`,
-          url: resolvedUrl,
+          url: currentUrl,
         });
         window.dispatchEvent(
           new CustomEvent("literary-toast", {
@@ -78,9 +75,9 @@ export function ShareButton({
     }
   };
 
-  const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${title} — ${resolvedUrl}`)}`;
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(resolvedUrl)}`;
-  const emailUrl = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`I wanted to share this with you:\n\n${title}\n${resolvedUrl}`)}`;
+  const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`${title} — ${currentUrl}`)}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(currentUrl)}`;
+  const emailUrl = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`I wanted to share this with you:\n\n${title}\n${currentUrl}`)}`;
 
   const hasNativeShare = typeof navigator !== "undefined" && !!navigator.share;
 

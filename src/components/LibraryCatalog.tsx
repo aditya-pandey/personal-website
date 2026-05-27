@@ -9,7 +9,19 @@ import { Shelf } from "./library/Shelf";
 import { BookOpen, Film, Music, FileText } from "lucide-react";
 
 interface LibraryCatalogProps {
-  currentReading: any;
+  currentReading: {
+    reading?: {
+      title: string;
+      author: string;
+      note?: string;
+    };
+    watched?: {
+      title: string;
+      director: string;
+      year: string;
+      note?: string;
+    };
+  } | null;
   dynamicItems: ArchiveItem[];
 }
 

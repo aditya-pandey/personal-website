@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -52,6 +52,26 @@ export function CommandMenu() {
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
+  const triggerAction = useCallback((item: SearchItem) => {
+    setIsOpen(false);
+    setSearchQuery("");
+    if (item.link.startsWith("http")) {
+      window.open(item.link, "_blank", "noopener,noreferrer");
+    } else {
+      router.push(item.link);
+    }
+  }, [router]);
+
+  const closeMenu = useCallback(() => {
+    setIsOpen(false);
+    setSearchQuery("");
+  }, []);
+
+  const handleSearchQueryChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    setSelectedIndex(0);
+  }, []);
+
   // 1. Fetch Search Index on Mount
   useEffect(() => {
     fetch("/api/search")
@@ -69,15 +89,20 @@ export function CommandMenu() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        setIsOpen((prev) => !prev);
+        setIsOpen((prev) => {
+          if (prev) {
+            setSearchQuery("");
+          }
+          return !prev;
+        });
       } else if (e.key === "Escape") {
-        setIsOpen(false);
+        closeMenu();
       }
     };
     
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [closeMenu]);
 
   // 3. Focus input when menu opens
   useEffect(() => {
@@ -85,7 +110,6 @@ export function CommandMenu() {
       setTimeout(() => inputRef.current?.focus(), 50);
       document.body.style.overflow = "hidden";
     } else {
-      setSearchQuery("");
       document.body.style.overflow = "";
     }
     return () => {
@@ -110,12 +134,7 @@ export function CommandMenu() {
     });
   }, [items, searchQuery]);
 
-  // 5. Reset selection on query change
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [searchQuery]);
-
-  // 6. Keyboard navigation (Arrows + Enter)
+  // 5. Keyboard navigation (Arrows + Enter)
   useEffect(() => {
     if (!isOpen || filteredItems.length === 0) return;
 
@@ -137,9 +156,9 @@ export function CommandMenu() {
 
     window.addEventListener("keydown", handleNav);
     return () => window.removeEventListener("keydown", handleNav);
-  }, [isOpen, filteredItems, selectedIndex]);
+  }, [isOpen, filteredItems, selectedIndex, triggerAction]);
 
-  // 7. Scroll active item into view
+  // 6. Scroll active item into view
   useEffect(() => {
     if (listRef.current) {
       const activeEl = listRef.current.querySelector("[data-active='true']");
@@ -148,16 +167,6 @@ export function CommandMenu() {
       }
     }
   }, [selectedIndex]);
-
-  const triggerAction = (item: SearchItem) => {
-    setIsOpen(false);
-    
-    if (item.link.startsWith("http")) {
-      window.open(item.link, "_blank", "noopener,noreferrer");
-    } else {
-      router.push(item.link);
-    }
-  };
 
   return (
     <>
@@ -192,7 +201,7 @@ export function CommandMenu() {
                   ref={inputRef}
                   type="text"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={handleSearchQueryChange}
                   placeholder="Type to search thoughts, poems, archives..."
                   className="flex-grow bg-transparent border-0 outline-none text-sm text-ink placeholder:italic placeholder:text-ink/30 font-sans"
                 />

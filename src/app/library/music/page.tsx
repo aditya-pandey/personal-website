@@ -1,5 +1,5 @@
 import { ArchivePageLayout } from "@/components/library/ArchivePageLayout";
-import { MUSIC_SHELVES, staticArchiveItems } from "@/lib/library-data";
+import { staticArchiveItems } from "@/lib/library-data";
 
 export const metadata = {
   title: "Music | Library",

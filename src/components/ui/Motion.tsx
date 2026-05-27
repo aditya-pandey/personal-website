@@ -1,7 +1,22 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
-import { ReactNode } from "react";
+import { motion, useReducedMotion as useFramerReducedMotion } from "framer-motion";
+import { ReactNode, useState, useEffect } from "react";
+
+function useReducedMotion() {
+  const [mounted, setMounted] = useState(false);
+  const shouldReduce = useFramerReducedMotion();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMounted(true);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Return false during SSR/hydration, and only read user's motion preference post-mount.
+  return mounted ? (shouldReduce ?? false) : false;
+}
 
 // Standard easing curve inspired by Apple's smooth spring-like bezier
 const EASE = [0.21, 0.47, 0.32, 0.98] as const;
@@ -65,7 +80,7 @@ export function StaggerItem({ children, className = "" }: MotionProps) {
   const shouldReduceMotion = useReducedMotion();
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 10 },
+    hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 10 },
     show: { 
       opacity: 1, 
       y: 0, 

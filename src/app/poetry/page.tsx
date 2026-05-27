@@ -32,27 +32,6 @@ export default function Poetry() {
             <div className="w-full h-full relative flex items-center justify-center">
               <Image 
                 src="/book_cover.png" 
-<<<<<<< HEAD
-                alt="Nirvana se Pehle Book Cover"
-                width={300}
-                height={450}
-                className="w-full h-auto object-cover"
-              />
-            </div>
-            <div>
-              <h2 className="font-serif text-3xl md:text-4xl mb-4 text-ink">निर्वाण से पहले</h2>
-              <p className="font-sans text-lg text-ink/80 leading-[1.7] mb-8">
-                A collection of Hindi poetry exploring love, loss, and the silent spaces between human connection. Available now on Amazon and Flipkart.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <a href="https://www.amazon.in/dp/9369531718" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-ink text-canvas font-sans text-sm tracking-wide rounded hover:bg-ink/90 transition-colors shadow-sm">
-                  Buy on Amazon
-                </a>
-                <a href="https://www.flipkart.com/9789369531714/p/itm23f74b4d5e557" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-surface border border-stone text-ink font-sans text-sm tracking-wide rounded hover:bg-stone/20 transition-colors">
-                  Buy on Flipkart
-                </a>
-              </div>
-=======
                 alt="निर्वाण से पहले Book Cover"
                 width={200}
                 height={300}
@@ -90,7 +69,6 @@ export default function Poetry() {
               >
                 Buy on Flipkart
               </a>
->>>>>>> 686fb3c (Multiple Updates)
             </div>
           </div>
         </FadeIn>

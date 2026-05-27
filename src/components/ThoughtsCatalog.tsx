@@ -15,8 +15,6 @@ const SECONDARY_CATEGORIES = [
 ];
 
 // Combine all for full-text tags validation
-const ALL_CATEGORIES = [...PRIMARY_CATEGORIES, ...SECONDARY_CATEGORIES];
-
 interface ThoughtsCatalogProps {
   initialThoughts: MDXDocument<BaseMetadata>[];
 }

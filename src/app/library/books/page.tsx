@@ -1,6 +1,6 @@
 import { getLibrary } from "@/lib/content";
 import { ArchivePageLayout } from "@/components/library/ArchivePageLayout";
-import { BOOK_SHELVES, staticArchiveItems, ArchiveItem } from "@/lib/library-data";
+import { staticArchiveItems, ArchiveItem } from "@/lib/library-data";
 
 export const metadata = {
   title: "Books | Library",
