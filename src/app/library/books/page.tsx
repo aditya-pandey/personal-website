@@ -1,6 +1,6 @@
 import { getLibrary } from "@/lib/content";
 import { ArchivePageLayout } from "@/components/library/ArchivePageLayout";
-import { staticArchiveItems, ArchiveItem } from "@/lib/library-data";
+import { staticArchiveItems, ArchiveItem, sortBooks } from "@/lib/library-data";
 
 export const metadata = {
   title: "Books | Library",
@@ -28,7 +28,7 @@ export default function BooksArchivePage() {
   const filteredStatic = staticArchiveItems.filter(
     (item) => item.type === "book" && !dynamicIds.has(item.id)
   );
-  const allBooks = [...dynamicItems, ...filteredStatic];
+  const allBooks = sortBooks([...dynamicItems, ...filteredStatic]);
 
   return (
     <ArchivePageLayout

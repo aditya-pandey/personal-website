@@ -161,19 +161,19 @@ export const curatedCollections = [
     id: "memory-time",
     title: "On Memory & Time",
     description: "Works that grapple with nostalgia, the passing of hours, and what we leave behind.",
-    items: ["the-stranger", "kafka-on-the-shore", "the-midnight-library", "stalker", "perfect-days", "the-time-machine"]
+    items: ["the-stranger", "kafka-on-the-shore", "the-midnight-library", "arrival", "interstellar", "perfect-days", "the-time-machine"]
   },
   {
     id: "solitude",
     title: "Stories of Solitude",
     description: "Reflections on isolation, alienation, and finding peace in being alone.",
-    items: ["the-stranger", "siddhartha", "the-midnight-library", "the-catcher-in-the-rye", "perfect-days", "gymnopedie-1"]
+    items: ["the-stranger", "siddhartha", "the-midnight-library", "the-catcher-in-the-rye", "perfect-days", "time-in-a-bottle"]
   },
   {
     id: "tech-society",
     title: "Technology & Design",
     description: "Essays and projects exploring software, abstraction, and simple architectures.",
-    items: ["steve-jobs", "zero-to-one-notes-on-startups-or-how-to-build-the-future", "the-checklist-manifesto-how-to-get-things-right", "keep-simple", "politics-language"]
+    items: ["steve-jobs", "zero-to-one-notes-on-startups-or-how-to-build-the-future", "the-checklist-manifesto-how-to-get-things-right", "cs50-harvard"]
   },
   {
     id: "literature-culture",
@@ -992,24 +992,6 @@ export const staticArchiveItems: ArchiveItem[] = [
 
   // ── Films ──────────────────────────────────────────────────────────
   {
-    id: "stalker",
-    title: "Stalker",
-    creator: "Andrei Tarkovsky",
-    type: "film",
-    tags: ["Cinema", "Philosophy", "Memory", "Silence"],
-    year: "1979",
-    note: "A slow-burning search for desire and belief in a wet, green wasteland."
-  },
-  {
-    id: "mood-love",
-    title: "In the Mood for Love",
-    creator: "Wong Kar-wai",
-    type: "film",
-    tags: ["Cinema", "Memory", "Loneliness", "Solitude"],
-    year: "2000",
-    note: "A masterclass in restraint, color, and quiet longing."
-  },
-  {
     id: "perfect-days",
     title: "Perfect Days",
     creator: "Wim Wenders",
@@ -1019,133 +1001,165 @@ export const staticArchiveItems: ArchiveItem[] = [
     note: "The beauty of everyday repetition and finding peace in simple habits."
   },
   {
-    id: "mirror-tarkovsky",
-    title: "Mirror",
-    creator: "Andrei Tarkovsky",
+    id: "coherence",
+    title: "Coherence",
+    creator: "James Ward Byrkit",
     type: "film",
-    tags: ["Cinema", "Memory", "Dreams", "Poetry"],
-    year: "1975",
-    note: "Memory woven as film, sliding across wind, mirrors, and childhood fields."
+    tags: ["Cinema", "Dreams"],
+    year: "2013",
+    note: "A mind-bending sci-fi thriller exploring parallel universes and human dynamics during a comet flyby."
   },
   {
-    id: "yi-yi",
-    title: "Yi Yi",
-    creator: "Edward Yang",
+    id: "arrival",
+    title: "Arrival",
+    creator: "Denis Villeneuve",
     type: "film",
-    tags: ["Cinema", "Routine", "Memory", "Solitude"],
-    year: "2000",
-    note: "A gentle, all-encompassing view of Taiwanese family life."
+    tags: ["Cinema", "Memory", "Silence"],
+    year: "2016",
+    note: "A sublime exploration of language, time, and how we choose to live when we know the end from the beginning."
   },
   {
-    id: "8-half",
-    title: "8½",
-    creator: "Federico Fellini",
+    id: "the-man-from-earth",
+    title: "The Man from Earth",
+    creator: "Richard Schenkman",
     type: "film",
-    tags: ["Cinema", "Dreams", "Creativity"],
-    year: "1963",
-    note: "A chaotic, dreamlike portrait of creative block and memory."
+    tags: ["Cinema", "Silence", "Solitude"],
+    year: "2007",
+    note: "An intellectual dialogue about history, faith, and existence, set entirely in a single room."
+  },
+  {
+    id: "interstellar",
+    title: "Interstellar",
+    creator: "Christopher Nolan",
+    type: "film",
+    tags: ["Cinema", "Memory", "Solitude"],
+    year: "2014",
+    note: "An epic journey through space and time, grounded in a father's promise and love's dimensional persistence."
+  },
+  {
+    id: "shutter-island",
+    title: "Shutter Island",
+    creator: "Martin Scorsese",
+    type: "film",
+    tags: ["Cinema", "Dreams", "Memory"],
+    year: "2010",
+    note: "A dark, atmospheric psychological puzzle examining grief, guilt, and the walls the mind builds to survive."
+  },
+  {
+    id: "swades",
+    title: "Swades",
+    creator: "Ashutosh Gowariker",
+    type: "film",
+    tags: ["Cinema", "Routine", "Solitude"],
+    year: "2004",
+    note: "A heartwarming, grounded story of identity, home, and returning to one's roots."
+  },
+  {
+    id: "udaan",
+    title: "Udaan",
+    creator: "Vikramaditya Motwane",
+    type: "film",
+    tags: ["Cinema", "Creativity", "Solitude"],
+    year: "2010",
+    note: "A poignant coming-of-age story about freedom, poetry, and escaping oppressive constraints."
+  },
+  {
+    id: "incendies",
+    title: "Incendies",
+    creator: "Denis Villeneuve",
+    type: "film",
+    tags: ["Cinema", "Memory", "Silence"],
+    year: "2010",
+    note: "A devastating, powerful masterpiece tracking family secrets, trauma, and reconciliation across borders."
   },
 
   // ── Music ──────────────────────────────────────────────────────────
   {
-    id: "blue-notebooks",
-    title: "The Blue Notebooks",
-    creator: "Max Richter",
-    type: "music",
-    tags: ["Music", "Writing", "Late Night", "Solitude"],
-    year: "2004",
-    note: "Writing companion for rain-soaked afternoons."
-  },
-  {
-    id: "glassworks",
-    title: "Glassworks",
-    creator: "Philip Glass",
-    type: "music",
-    tags: ["Music", "Focus", "Writing", "Classical"],
-    year: "1982",
-    note: "Hypnotic, repetitive structures that align the mind."
-  },
-  {
-    id: "12",
-    title: "12",
-    creator: "Ryuichi Sakamoto",
+    id: "time-in-a-bottle",
+    title: "Time in a Bottle",
+    creator: "Jim Croce",
     type: "music",
     tags: ["Music", "Late Night", "Solitude"],
-    year: "2023",
-    note: "A fragile, quiet recording of existence."
+    year: "1973",
+    note: "A melancholic acoustic classic reflecting on time, love, and keeping moments forever."
   },
   {
-    id: "kind-of-blue",
-    title: "Kind of Blue",
-    creator: "Miles Davis",
+    id: "husna",
+    title: "Husna",
+    creator: "Piyush Mishra",
     type: "music",
-    tags: ["Music", "Late Night", "Classical"],
-    year: "1959",
-    note: "Late nights, when the room grows cold."
-  },
-  {
-    id: "music-airports",
-    title: "Ambient 1: Music for Airports",
-    creator: "Brian Eno",
-    type: "music",
-    tags: ["Music", "Ambient", "Focus", "Writing"],
-    year: "1978",
-    note: "A foundational text in ambient sound design, intended to induce calm."
-  },
-  {
-    id: "gymnopedies-satie",
-    title: "Gymnopédies & Gnossiennes",
-    creator: "Erik Satie",
-    type: "music",
-    tags: ["Music", "Classical", "Solitude"],
-    year: "1888",
-    note: "Sparsely populated piano compositions, echoing empty rooms."
+    tags: ["Music", "Late Night", "Solitude"],
+    year: "2008",
+    note: "A soulful, poetic lament speaking across borders, partition, and lost connection."
   },
 
   // ── Essays ─────────────────────────────────────────────────────────
   {
-    id: "death-author",
-    title: "The Death of the Author",
-    creator: "Roland Barthes",
-    type: "essay",
-    tags: ["Philosophy", "Literature"],
-    year: "1967",
-    note: "On the separation of the creator and the text."
-  },
-  {
-    id: "politics-language",
-    title: "Politics and the English Language",
-    creator: "George Orwell",
-    type: "essay",
-    tags: ["Literature", "Philosophy"],
-    year: "1946",
-    note: "An evergreen warning against lazy thought and prefabricated language."
-  },
-  {
-    id: "keep-simple",
-    title: "Keep It Simple",
-    creator: "Alan Kay",
-    type: "essay",
-    tags: ["Technology", "Systems"],
-    year: "1989",
-    note: "Architectural wisdom applied to software and thought design."
-  },
-  {
-    id: "cathedral-bazaar",
-    title: "The Cathedral and the Bazaar",
-    creator: "Eric S. Raymond",
-    type: "essay",
-    tags: ["Technology", "Systems"],
-    year: "1997",
-    note: "Contrasting top-down planning with decentralized peer review."
-  },
-  {
-    id: "usefulness-useless",
-    title: "The Usefulness of Useless Knowledge",
-    creator: "Abraham Flexner",
+    id: "history-ancient-philosophy",
+    title: "History of Ancient Philosophy (Full Course)",
+    creator: "Adam Rosenfield",
     type: "essay",
     tags: ["Philosophy", "History"],
-    year: "1939",
-    note: "A powerful defense of curiosity-driven basic research over target goals."
+    link: "https://www.youtube.com/playlist?list=PLSvsx8116eZjRuC0qaZ5UEhybCsYpA-1j",
+    year: "2020",
+    note: "A comprehensive video lecture series covering the foundations of Western philosophical thought."
+  },
+  {
+    id: "cs50-harvard",
+    title: "CS50 Introduction to Computer Science",
+    creator: "David J. Malan (Harvard University)",
+    type: "essay",
+    tags: ["Technology", "Systems"],
+    link: "https://pll.harvard.edu/course/cs50-introduction-computer-science",
+    year: "2026",
+    note: "An entry-level course that teaches how to think algorithmically and solve problems efficiently."
+  },
+  {
+    id: "do-schools-kill-creativity",
+    title: "Do Schools Kill Creativity? (TED Lecture)",
+    creator: "Sir Ken Robinson",
+    type: "essay",
+    tags: ["Philosophy", "Creativity"],
+    link: "https://youtu.be/iG9CE55wbtY?si=Nj1dUs7SLUnyqy26",
+    year: "2006",
+    note: "The legendary TED talk advocating for an education system that nurtures creativity rather than undermining it."
   }
 ];
+
+export function sortBooks(books: ArchiveItem[]): ArchiveItem[] {
+  const getPriorityRank = (item: ArchiveItem) => {
+    const title = item.title.toLowerCase();
+    const id = item.id.toLowerCase();
+    if (title.includes("the stranger") || id === "the-stranger" || id === "stranger") return 0;
+    if (title.includes("gaban") || id === "gaban") return 1;
+    if (title.includes("godan") || id === "godan") return 2;
+    if (title.includes("magic of reality") || id === "the-magic-of-reality" || id === "magic-of-reality") return 3;
+    return -1;
+  };
+
+  const isLowPriority = (item: ArchiveItem) => {
+    const creator = item.creator.toLowerCase();
+    const tags = item.tags.map(t => t.toLowerCase());
+    const title = item.title.toLowerCase();
+    
+    const isChetanBhagat = creator.includes("chetan bhagat");
+    const isRomance = tags.includes("romance") || title.includes("romance") || tags.includes("love story");
+    return isChetanBhagat || isRomance;
+  };
+
+  return [...books].sort((a, b) => {
+    const aRank = getPriorityRank(a);
+    const bRank = getPriorityRank(b);
+    
+    if (aRank !== -1 && bRank !== -1) return aRank - bRank;
+    if (aRank !== -1) return -1;
+    if (bRank !== -1) return 1;
+
+    const aLow = isLowPriority(a);
+    const bLow = isLowPriority(b);
+    if (aLow && !bLow) return 1;
+    if (!aLow && bLow) return -1;
+    
+    return 0; // preserve original relative order
+  });
+}

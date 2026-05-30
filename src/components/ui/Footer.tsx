@@ -8,7 +8,6 @@ export function Footer() {
         <span className="tracking-wide">Somewhere between technology and stories.</span>
       </div>
       <div className="flex flex-col md:items-end gap-1 text-center md:text-right tracking-wide">
-        <span>Made slowly. Updated occasionally.</span>
         <span>&copy; {currentYear}</span>
       </div>
     </footer>

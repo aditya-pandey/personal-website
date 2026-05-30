@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArchiveItem, staticArchiveItems, PREVIEW_SHELVES } from "@/lib/library-data";
+import { ArchiveItem, staticArchiveItems, PREVIEW_SHELVES, sortBooks } from "@/lib/library-data";
 import { FadeIn } from "./ui/Motion";
 import { Shelf } from "./library/Shelf";
 import { BookOpen, Film, Music, FileText } from "lucide-react";
@@ -60,11 +60,16 @@ function getIconComponent(type: "book" | "film" | "music" | "essay") {
 }
 
 export function LibraryCatalog({ currentReading, dynamicItems }: LibraryCatalogProps) {
-  // Combine dynamic books with static archive items
+  // Combine dynamic books with static archive items and sort books appropriately
   const allItems = useMemo(() => {
     const dynamicIds = new Set(dynamicItems.map((item) => item.id));
     const filteredStatic = staticArchiveItems.filter((item) => !dynamicIds.has(item.id));
-    return [...dynamicItems, ...filteredStatic];
+    const combined = [...dynamicItems, ...filteredStatic];
+    
+    const books = combined.filter((item) => item.type === "book");
+    const others = combined.filter((item) => item.type !== "book");
+    
+    return [...sortBooks(books), ...others];
   }, [dynamicItems]);
 
   // Build shelf data from PREVIEW_SHELVES config
