@@ -25,8 +25,8 @@ const notoSerifDevanagari = Noto_Serif_Devanagari({
 });
 
 export const metadata: Metadata = {
-  title: "Aditya Pandey | Digital Study",
-  description: "A digital sanctuary for thoughts, poetry, and experiments.",
+  title: "aditya",
+  description: "Space for thoughts, poetry, and experiments.",
 };
 
 export default function RootLayout({
