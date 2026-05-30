@@ -4,10 +4,34 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ShareButton } from "@/components/ShareButton";
 import { WriteBack } from "@/components/WriteBack";
+import { Metadata } from "next";
 
 export async function generateStaticParams() {
   const thoughts = getThoughts();
   return thoughts.map((t) => ({ slug: t.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const thought = getThoughtBySlug(slug);
+  if (!thought) return {};
+
+  return {
+    title: `${thought.metadata.title} | Aditya Pandey`,
+    description: thought.metadata.excerpt || "An essay/reflection by Aditya Pandey.",
+    openGraph: {
+      title: thought.metadata.title,
+      description: thought.metadata.excerpt || "An essay/reflection by Aditya Pandey.",
+      type: "article",
+      publishedTime: thought.metadata.date,
+      authors: ["Aditya Pandey"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: thought.metadata.title,
+      description: thought.metadata.excerpt || "An essay/reflection by Aditya Pandey.",
+    }
+  };
 }
 
 export default async function ThoughtPost({ params }: { params: Promise<{ slug: string }> }) {

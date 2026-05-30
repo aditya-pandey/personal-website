@@ -6,10 +6,34 @@ import { HTMLAttributes } from "react";
 import { FadeIn } from "@/components/ui/Motion";
 import { ShareButton } from "@/components/ShareButton";
 import { WriteBack } from "@/components/WriteBack";
+import { Metadata } from "next";
 
 export async function generateStaticParams() {
   const poetry = getPoetry();
   return poetry.map((p) => ({ slug: p.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const poem = getPoetryBySlug(slug);
+  if (!poem) return {};
+
+  return {
+    title: `${poem.metadata.title} | Poetry | Aditya Pandey`,
+    description: poem.metadata.excerpt || "A poem by Aditya Pandey.",
+    openGraph: {
+      title: poem.metadata.title,
+      description: poem.metadata.excerpt || "A poem by Aditya Pandey.",
+      type: "article",
+      publishedTime: poem.metadata.date,
+      authors: ["Aditya Pandey"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: poem.metadata.title,
+      description: poem.metadata.excerpt || "A poem by Aditya Pandey.",
+    }
+  };
 }
 
 // Custom components for poetry to use devanagari font with stanza spacing

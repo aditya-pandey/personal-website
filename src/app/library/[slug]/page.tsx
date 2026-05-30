@@ -2,10 +2,33 @@ import { getLibrary, getLibraryBySlug } from "@/lib/content";
 import { MDXRenderer } from "@/components/ui/MDXRenderer";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { Metadata } from "next";
 
 export async function generateStaticParams() {
   const library = getLibrary();
   return library.map((b) => ({ slug: b.slug }));
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const book = getLibraryBySlug(slug);
+  if (!book) return {};
+
+  return {
+    title: `${book.metadata.title} | Library | Aditya Pandey`,
+    description: book.metadata.quote || `Reflections on ${book.metadata.title} by ${book.metadata.author}.`,
+    openGraph: {
+      title: book.metadata.title,
+      description: book.metadata.quote || `Reflections on ${book.metadata.title} by ${book.metadata.author}.`,
+      type: "article",
+      authors: ["Aditya Pandey"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: book.metadata.title,
+      description: book.metadata.quote || `Reflections on ${book.metadata.title} by ${book.metadata.author}.`,
+    }
+  };
 }
 
 export default async function LibraryPost({ params }: { params: Promise<{ slug: string }> }) {
