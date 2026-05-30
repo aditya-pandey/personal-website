@@ -118,6 +118,35 @@ a, button, [role="button"], [tabindex="0"] {
   animation: float-up 0.25s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }
 
+@keyframes slide-up-bottom-sheet {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up-sheet {
+  animation: slide-up-bottom-sheet 0.3s cubic-bezier(0.21, 0.47, 0.32, 0.98) forwards;
+}
+
+@keyframes dropdown-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-dropdown-fade {
+  animation: dropdown-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+
 /* Hide scrollbar for horizontal shelf scrolling */
 .hide-scrollbar {
   scrollbar-width: none;

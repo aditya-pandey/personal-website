@@ -34,6 +34,22 @@ export function ThoughtsCatalog({ initialThoughts }: ThoughtsCatalogProps) {
   const [sortBy, setSortBy] = useState<"latest" | "oldest">("latest");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  // Track search queries in Google Analytics with 1s debounce
+  useEffect(() => {
+    if (!searchQuery.trim() || searchQuery.trim().length < 3) return;
+    
+    const handler = setTimeout(() => {
+      if (typeof window !== "undefined" && window.gtag) {
+        window.gtag("event", "search", {
+          search_term: searchQuery.trim(),
+          search_category: "thoughts",
+        });
+      }
+    }, 1000);
+
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
   // Close dropdown on click outside
   useEffect(() => {
     if (!isDropdownOpen) return;

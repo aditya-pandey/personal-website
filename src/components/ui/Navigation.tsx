@@ -23,7 +23,15 @@ function ThemeToggle() {
 
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={() => {
+        const nextTheme = theme === "dark" ? "light" : "dark";
+        setTheme(nextTheme);
+        if (typeof window !== "undefined" && window.gtag) {
+          window.gtag("event", "theme_switch", {
+            theme: nextTheme,
+          });
+        }
+      }}
       className="p-2 rounded-full text-ink/60 hover:text-accent hover:bg-surface/50 transition-colors focus:outline-none"
       aria-label="Toggle theme"
     >

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArchiveItem, staticArchiveItems, PREVIEW_SHELVES, sortBooks } from "@/lib/library-data";
@@ -84,6 +84,22 @@ export function LibraryCatalog({ currentReading, dynamicItems }: LibraryCatalogP
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+
+  // Track search queries in Google Analytics with 1s debounce
+  useEffect(() => {
+    if (!searchQuery.trim() || searchQuery.trim().length < 3) return;
+    
+    const handler = setTimeout(() => {
+      if (typeof window !== "undefined" && window.gtag) {
+        window.gtag("event", "search", {
+          search_term: searchQuery.trim(),
+          search_category: "library",
+        });
+      }
+    }, 1000);
+
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   const isSearchActive = useMemo(() => {
     return searchQuery.trim().length > 0 || selectedType !== null || selectedTag !== null;

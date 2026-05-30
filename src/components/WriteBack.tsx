@@ -11,6 +11,15 @@ export function WriteBack({ title }: WriteBackProps) {
   const emailHref = `mailto:adityadpandey@gmail.com?subject=${emailSubject}`;
   const linkedinHref = "https://www.linkedin.com/in/adityapandey99/";
 
+  const trackWriteBack = (platform: string) => {
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "write_back", {
+        platform: platform,
+        item_title: title,
+      });
+    }
+  };
+
   return (
     <FadeIn delay={0.2} className="flex flex-col gap-4 border-t border-stone/20 pt-12 select-none">
       <p className="font-serif italic text-lg text-ink/75 leading-relaxed">
@@ -19,6 +28,7 @@ export function WriteBack({ title }: WriteBackProps) {
       <div className="flex gap-4 text-xs font-sans uppercase tracking-widest font-semibold text-ink/50">
         <a 
           href={emailHref}
+          onClick={() => trackWriteBack("email")}
           className="relative hover:text-accent transition-colors duration-300 after:absolute after:bottom-[-2px] after:left-0 after:right-0 after:h-[1px] after:bg-accent after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300"
         >
           Email
@@ -28,6 +38,7 @@ export function WriteBack({ title }: WriteBackProps) {
           href={linkedinHref}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackWriteBack("linkedin")}
           className="relative hover:text-accent transition-colors duration-300 after:absolute after:bottom-[-2px] after:left-0 after:right-0 after:h-[1px] after:bg-accent after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left after:duration-300"
         >
           LinkedIn
