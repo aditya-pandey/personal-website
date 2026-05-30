@@ -136,7 +136,7 @@ export function Shelf({ id, title, description, items, href, maxItems }: ShelfPr
   }
 
   return (
-    <section className="flex flex-col gap-5">
+    <section className="flex flex-col gap-5 w-full min-w-0">
       {/* Shelf header */}
       <div className="flex items-baseline justify-between gap-4 select-none">
         <div className="flex flex-col gap-1">

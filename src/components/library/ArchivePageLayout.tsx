@@ -131,7 +131,7 @@ export function ArchivePageLayout({
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12 md:py-20 flex flex-col gap-10 md:gap-14">
+    <div className="w-full max-w-6xl mx-auto px-6 py-12 md:py-20 flex flex-col gap-10 md:gap-14 min-w-0">
       {/* Breadcrumbs & Header */}
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-2 font-sans text-xs uppercase tracking-widest text-ink/40 select-none">
@@ -211,10 +211,10 @@ export function ArchivePageLayout({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.4, ease: EASE }}
-              className="flex flex-col gap-14 md:gap-18"
+              className="flex flex-col gap-14 md:gap-18 w-full min-w-0"
             >
               {shelves.map((shelf, idx) => (
-                <FadeIn key={shelf.id} delay={0.1 + idx * 0.08}>
+                <FadeIn key={shelf.id} delay={0.1 + idx * 0.08} className="w-full min-w-0">
                   <Shelf
                     id={shelf.id}
                     title={shelf.title}

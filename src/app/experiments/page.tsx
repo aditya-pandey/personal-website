@@ -12,8 +12,8 @@ export default function ExperimentsIndex() {
   const experiments = getExperiments();
 
   return (
-    <div className="w-full max-w-[1120px] mx-auto px-5 lg:px-8 py-16 md:py-[120px]">
-      <header className="mb-12 md:mb-[120px] border-b border-stone/50 pb-8">
+    <div className="w-full max-w-[1120px] mx-auto px-5 lg:px-8 py-12 md:py-20">
+      <header className="mb-10 md:mb-14 border-b border-stone/50 pb-6">
         <TextReveal 
           text="Experiments & Projects" 
           className="font-serif text-4xl md:text-5xl lg:text-[48px] tracking-tight leading-[1.1] mb-6"

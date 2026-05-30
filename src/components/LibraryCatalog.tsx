@@ -259,9 +259,9 @@ export function LibraryCatalog({ currentReading, dynamicItems }: LibraryCatalogP
               </section>
 
               {/* Thematic Shelves */}
-              <div className="flex flex-col gap-14 md:gap-18 border-t border-stone/25 pt-12">
+              <div className="flex flex-col gap-14 md:gap-18 border-t border-stone/25 pt-12 w-full min-w-0">
                 {shelves.map((shelf, idx) => (
-                  <FadeIn key={shelf.id} delay={0.1 + idx * 0.08}>
+                  <FadeIn key={shelf.id} delay={0.1 + idx * 0.08} className="w-full min-w-0">
                     <Shelf
                       id={shelf.id}
                       title={shelf.title}

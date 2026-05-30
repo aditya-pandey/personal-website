@@ -92,7 +92,7 @@ export function ThoughtsCatalog({ initialThoughts }: ThoughtsCatalogProps) {
   return (
     <div className="w-full flex flex-col">
       {/* Search Input Bar */}
-      <div className="relative mb-6">
+      <div className="relative mb-4">
         <input
           type="text"
           value={searchQuery}
@@ -111,7 +111,7 @@ export function ThoughtsCatalog({ initialThoughts }: ThoughtsCatalogProps) {
       </div>
 
       {/* Filter and Sort Row */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone/20 pb-4 text-xs font-sans uppercase tracking-widest text-ink/40 font-semibold mb-12 select-none">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-stone/20 pb-4 text-xs font-sans uppercase tracking-widest text-ink/40 font-semibold mb-8 select-none">
         {/* Categories */}
         <div className="flex flex-wrap gap-x-2 gap-y-1.5 items-center">
           <span>Filter:</span>
