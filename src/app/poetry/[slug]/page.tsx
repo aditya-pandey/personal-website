@@ -74,22 +74,22 @@ export default async function PoetryPost({ params }: { params: Promise<{ slug: s
   const label = navLabels[currentIndex % navLabels.length];
 
   return (
-    <div className="w-full min-h-[calc(100vh-64px)] flex flex-col items-center justify-between py-16 md:py-24 px-5 poetry-reading-bg overflow-hidden">
+    <div className="w-full min-h-[calc(100vh-64px)] flex flex-col items-center justify-between pt-6 pb-12 sm:pt-10 sm:pb-16 md:py-24 px-5 poetry-reading-bg overflow-hidden">
       <FadeIn className="w-full flex flex-col items-center flex-grow max-w-[680px]">
         {/* Top Navigation */}
         <Link 
           href="/poetry" 
-          className="font-sans text-xs uppercase tracking-widest text-ink/40 hover:text-accent transition-colors duration-300 font-semibold mb-16 select-none"
+          className="font-sans text-xs uppercase tracking-widest text-ink/40 hover:text-accent transition-colors duration-300 font-semibold mb-6 sm:mb-10 select-none"
         >
           ← Return to Archive
         </Link>
 
         {/* Poem Header */}
-        <header className="mb-16 md:mb-20 text-center select-none flex flex-col items-center">
-          <h1 className="font-serif text-3xl md:text-5xl tracking-tight leading-[1.2] mb-6 text-ink">
+        <header className="mb-8 sm:mb-12 md:mb-16 text-center select-none flex flex-col items-center">
+          <h1 className="font-serif text-2xl sm:text-4xl md:text-5xl tracking-tight leading-[1.2] mb-4 sm:mb-6 text-ink">
             {poem.metadata.title}
           </h1>
-          <div className="flex items-center gap-4 font-sans text-xs uppercase tracking-widest text-ink/40 font-semibold">
+          <div className="flex items-center gap-3 sm:gap-4 font-sans text-xs uppercase tracking-widest text-ink/40 font-semibold">
             <span>{editorialMeta}</span>
             <span>&middot;</span>
             <ShareButton title={poem.metadata.title} label="Share Poem" />
@@ -97,12 +97,12 @@ export default async function PoetryPost({ params }: { params: Promise<{ slug: s
         </header>
 
         {/* Poem Body (asymmetrical left border) */}
-        <div className="poetry-body w-full max-w-[580px] text-left mb-16 pl-6 sm:pl-8 border-l border-accent/25 dark:border-accent/40">
+        <div className="poetry-body w-full max-w-[580px] text-left mb-10 sm:mb-16 pl-5 sm:pl-8 border-l border-accent/25 dark:border-accent/40">
           <MDXRemote source={poem.content} components={poetryComponents} />
         </div>
 
         {/* Write Back Section */}
-        <div className="w-full max-w-[580px] mb-16">
+        <div className="w-full max-w-[580px] mb-10 sm:mb-16">
           <WriteBack title={poem.metadata.title} />
         </div>
 

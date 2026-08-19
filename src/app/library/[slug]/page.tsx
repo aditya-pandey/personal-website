@@ -40,31 +40,31 @@ export default async function LibraryPost({ params }: { params: Promise<{ slug: 
   }
 
   return (
-    <div className="w-full max-w-[1120px] mx-auto px-5 lg:px-8 py-[120px]">
-      
-      <Link href="/library" className="font-sans text-sm text-ink/50 hover:text-accent transition-colors inline-flex items-center gap-2 mb-16">
-        &larr; Back to Library
-      </Link>
-
-      <header className="max-w-[800px] mx-auto mb-[80px] text-center">
-        <h1 className="font-serif text-4xl md:text-5xl lg:text-[48px] tracking-tight leading-[1.1] mb-6">
-          {book.metadata.title}
-        </h1>
-        <p className="font-sans text-lg uppercase tracking-widest text-ink/60">
-          By {book.metadata.author}
-        </p>
-      </header>
-
+    <div className="w-full max-w-[1120px] mx-auto px-5 lg:px-8 pt-6 pb-12 sm:pt-10 sm:pb-16 md:pt-16 md:pb-24">
       <div className="max-w-[65ch] mx-auto">
-        {book.metadata.quote && (
-          <blockquote className="border-l-2 border-accent pl-6 italic font-serif text-2xl my-12 text-ink-dark/80">
-            &quot;{book.metadata.quote}&quot;
-          </blockquote>
-        )}
-        
-        <MDXRenderer source={book.content} />
+        <Link href="/library" className="font-sans text-xs sm:text-sm text-ink/50 hover:text-accent transition-colors inline-flex items-center gap-2 mb-6 sm:mb-8">
+          &larr; Back to Library
+        </Link>
+
+        <header className="mb-8 sm:mb-12 text-center">
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[48px] tracking-tight leading-[1.15] mb-4 sm:mb-6">
+            {book.metadata.title}
+          </h1>
+          <p className="font-sans text-xs sm:text-sm uppercase tracking-widest text-ink/60">
+            By {book.metadata.author}
+          </p>
+        </header>
+
+        <div>
+          {book.metadata.quote && (
+            <blockquote className="border-l-2 border-accent pl-6 italic font-serif text-xl sm:text-2xl my-8 sm:my-10 text-ink-dark/80">
+              &quot;{book.metadata.quote}&quot;
+            </blockquote>
+          )}
+          
+          <MDXRenderer source={book.content} />
+        </div>
       </div>
-      
     </div>
   );
 }

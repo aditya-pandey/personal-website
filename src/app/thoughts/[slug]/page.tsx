@@ -43,33 +43,35 @@ export default async function ThoughtPost({ params }: { params: Promise<{ slug: 
   }
 
   return (
-    <div className="w-full max-w-[1120px] mx-auto px-5 lg:px-8 py-[120px]">
+    <div className="w-full max-w-[1120px] mx-auto px-5 lg:px-8 pt-6 pb-12 sm:pt-10 sm:pb-16 md:pt-16 md:pb-24">
       
-      <Link href="/thoughts" className="font-sans text-sm text-ink/50 hover:text-accent transition-colors inline-flex items-center gap-2 mb-16">
-        &larr; Back to Thoughts
-      </Link>
+      <div className="max-w-[65ch] mx-auto">
+        <Link href="/thoughts" className="font-sans text-xs sm:text-sm text-ink/50 hover:text-accent transition-colors inline-flex items-center gap-2 mb-6 sm:mb-8">
+          &larr; Back to Thoughts
+        </Link>
 
-      <header className="max-w-[65ch] mx-auto mb-[80px]">
-        <h1 className="font-serif text-4xl md:text-5xl lg:text-[48px] tracking-tight leading-[1.1] mb-6">
-          {thought.metadata.title}
-        </h1>
-        <div className="flex items-center flex-wrap gap-x-4 gap-y-2 font-sans text-sm text-ink/60 uppercase tracking-widest border-t border-stone/50 pt-6 mt-12">
-          <time>{new Date(thought.metadata.date).toLocaleDateString("en-US", { month: "long", year: "numeric", day: "numeric" })}</time>
-          {thought.metadata.tags && thought.metadata.tags.length > 0 && (
-            <>
-              <span>&middot;</span>
-              <span>{thought.metadata.tags.join(", ")}</span>
-            </>
-          )}
-          <span>&middot;</span>
-          <ShareButton title={thought.metadata.title} label="Share" className="text-sm font-sans uppercase tracking-widest text-ink/60 font-normal hover:text-accent" />
+        <header className="mb-8 sm:mb-12">
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-[48px] tracking-tight leading-[1.15] mb-4 sm:mb-6">
+            {thought.metadata.title}
+          </h1>
+          <div className="flex items-center flex-wrap gap-x-3 gap-y-2 font-sans text-xs sm:text-sm text-ink/60 uppercase tracking-widest border-t border-stone/50 pt-4 sm:pt-6 mt-6 sm:mt-8">
+            <time>{new Date(thought.metadata.date).toLocaleDateString("en-US", { month: "long", year: "numeric", day: "numeric" })}</time>
+            {thought.metadata.tags && thought.metadata.tags.length > 0 && (
+              <>
+                <span>&middot;</span>
+                <span>{thought.metadata.tags.join(", ")}</span>
+              </>
+            )}
+            <span>&middot;</span>
+            <ShareButton title={thought.metadata.title} label="Share" className="text-xs sm:text-sm font-sans uppercase tracking-widest text-ink/60 font-normal hover:text-accent" />
+          </div>
+        </header>
+
+        <MDXRenderer source={thought.content} />
+        
+        <div className="mt-12 sm:mt-16 md:mt-20">
+          <WriteBack title={thought.metadata.title} />
         </div>
-      </header>
-
-      <MDXRenderer source={thought.content} />
-      
-      <div className="max-w-[65ch] mx-auto mt-16 md:mt-24">
-        <WriteBack title={thought.metadata.title} />
       </div>
       
     </div>
