@@ -42,7 +42,7 @@ export default function Home() {
                     Somewhere between technology and stories.
                   </p>
                   <p className="font-serif text-sm md:text-[15px] text-ink/60 leading-[1.7] max-w-[62ch] mb-8 text-center font-light">
-                    Writer and observer who loves technology, books, poetry, cinema, and music. Working in Customer Experience and MarTech, exploring the intersections of code, literature, and art.
+                    Writer and observer who loves technology, books, poetry, cinema, music, and cricket. Exploring the intersections of code, literature, and art.
                   </p>
                   <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-[11px] font-sans uppercase tracking-widest font-semibold text-ink/45 select-none">
                     <a href="mailto:adityadpandey@gmail.com" className="hover:text-accent transition-colors">
