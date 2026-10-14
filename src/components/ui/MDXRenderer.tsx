@@ -1,6 +1,7 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { HTMLAttributes, ImgHTMLAttributes } from "react";
 import { BookCard } from "./BookCard";
+import * as VisualEssay from "@/components/visual-essay";
 
 const components = {
   h1: ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
@@ -41,6 +42,7 @@ const components = {
     <pre className={`font-sans text-sm bg-surface/50 p-6 rounded-lg overflow-x-auto my-8 border border-stone/30 transition-colors duration-500 ${className || ""}`} {...props} />
   ),
   BookCard,
+  ...VisualEssay,
 };
 
 interface MDXRendererProps {
